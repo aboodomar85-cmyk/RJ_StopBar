@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Stop Bar">
+<meta name="theme-color" content="#0a1420">
+<title>RJ AIRLINES | Stop Bar Assignment System — Queen Alia International Airport</title>
+<style>
+  :root{
+    --bg:#0a1420;
+    --bg2:#0f1e30;
+    --panel:#122336;
+    --panel2:#16293e;
+    --line:#22384f;
+    --text:#e8eef4;
+    --muted:#8ba3b8;
+    --amber:#f5a623;
+    --amber-dim:#8a5f16;
+    --red:#ff3b30;
+    --red-dim:#7a1a15;
+    --green:#3ddc84;
+    --taxiway-yellow:#ffcc33;
+    --blue:#007aff;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;background:transparent;color:var(--text);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+       -webkit-text-size-adjust:100%;}
+  body.lang-ar{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, Arial, sans-serif;}
+  body.lang-en{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;}
+  .wrap{max-width:980px;margin:0 auto;padding:22px 16px calc(60px + env(safe-area-inset-bottom));}
+
+  .hdr{position:relative;padding:26px 20px;border-radius:16px;overflow:hidden;
+       background:linear-gradient(135deg,var(--bg2) 0%,#0c1a2a 60%,var(--bg) 100%);
+       border:1px solid var(--line);margin-bottom:22px;}
+  .hdr::before{content:"";position:absolute;inset:0;
+       background-image:repeating-linear-gradient(90deg, var(--taxiway-yellow) 0 26px, transparent 26px 52px);
+       opacity:.05;height:6px;top:auto;bottom:0;}
+  .hdr-top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:30px;}
+  .rj-badge{position:absolute;top:14px;inset-inline-end:14px;font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;font-size:10.5px;
+       font-weight:700;letter-spacing:.06em;color:#0a1420;background:linear-gradient(135deg,var(--amber),#ffce6b);
+       padding:5px 11px;border-radius:20px;box-shadow:0 2px 10px rgba(245,166,35,.35);z-index:2;}
+  .rj-badge span{font-weight:500;opacity:.75;}
+  .lang-toggle{position:absolute;top:14px;inset-inline-start:14px;font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;font-size:11px;
+       font-weight:700;letter-spacing:.03em;color:var(--text);background:var(--panel2);border:1px solid var(--line);
+       padding:6px 12px;border-radius:20px;cursor:pointer;z-index:2;display:flex;align-items:center;gap:6px;
+       transition:border-color .15s, background .15s;}
+  .lang-toggle:hover{border-color:var(--blue);background:var(--panel);}
+  .lang-toggle:active{transform:scale(.97);}
+  .eyebrow{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;font-size:12px;letter-spacing:.12em;color:var(--amber);
+       text-transform:uppercase;display:flex;align-items:center;gap:8px;}
+  .eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 8px 2px var(--red);}
+  h1{font-size:22px;margin:8px 0 4px;padding-inline-end:60px;font-weight:800;letter-spacing:-0.01em;}
+  .sub{color:var(--muted);font-size:14px;margin:0;line-height:1.7;}
+  .manual-ref{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;font-size:11px;color:var(--muted);
+       background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 10px;white-space:nowrap;}
+
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:18px;}
+  .panel h2{font-size:15px;margin:0 0 14px;display:flex;align-items:center;gap:8px;font-weight:700;}
+  .panel h2 .num{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;font-size:12px;color:var(--bg);background:var(--amber);
+       width:20px;height:20px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+  @media (max-width:640px){.grid2,.grid3{grid-template-columns:1fr;}}
+  label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px;font-weight:600;}
+  select, input[type=text]{
+       width:100%;background:var(--bg2);border:1px solid var(--line);color:var(--text);
+       border-radius:10px;padding:14px 14px;font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;font-size:16px;outline:none;
+       transition:border-color .15s;-webkit-appearance:none;appearance:none;}
+  select:focus, input[type=text]:focus{border-color:var(--amber);}
+  .stand-meta{margin-top:10px;font-size:12.5px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap;}
+  .stand-meta b{color:var(--text);font-weight:700;}
+
+  .result{display:none;}
+  .result.show{display:block;}
+  .light-card{display:flex;align-items:center;gap:18px;background:radial-gradient(ellipse at 20% 20%, #17273a 0%, var(--panel) 70%);
+       border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:14px;flex-wrap:wrap;}
+  .light{width:70px;height:70px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+       font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;font-weight:700;font-size:24px;color:#fff;position:relative;}
+  .light.ok{background:radial-gradient(circle at 35% 30%, #6bffa8, var(--green) 55%, #1f8a52 100%);
+       box-shadow:0 0 0 6px rgba(61,220,132,.16), 0 0 34px 6px rgba(61,220,132,.55);color:#082a17;}
+  .light.warn{background:radial-gradient(circle at 35% 30%, #ffd166, var(--amber) 55%, var(--amber-dim) 100%);
+       box-shadow:0 0 0 6px rgba(245,166,35,.14), 0 0 34px 6px rgba(245,166,35,.5);color:#241800;}
+  .light.bad{background:radial-gradient(circle at 35% 30%, #ff6b5e, var(--red) 55%, var(--red-dim) 100%);
+       box-shadow:0 0 0 6px rgba(255,59,48,.14), 0 0 34px 6px rgba(255,59,48,.55);}
+  .light.searching{background:radial-gradient(circle at 35% 30%, #4da6ff, var(--blue) 55%, #0051a8 100%);
+       box-shadow:0 0 0 6px rgba(0,122,255,.14), 0 0 34px 6px rgba(0,122,255,.5);
+       animation:pulse 1.5s ease-in-out infinite;}
+  @keyframes pulse{
+    0%, 100%{opacity:1;}
+    50%{opacity:0.6;}
+  }
+  .result-body{flex:1;min-width:200px;}
+  .result-title{font-size:13px;color:var(--muted);margin:0 0 4px;font-weight:600;}
+  .result-main{font-size:19px;font-weight:800;margin:0 0 6px;line-height:1.4;}
+  .result-main .badge{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;background:var(--bg2);border:1px solid var(--line);
+       border-radius:6px;padding:2px 8px;font-size:14px;margin-inline-start:6px;color:var(--amber);}
+  .result-sub{font-size:13.5px;color:var(--muted);line-height:1.8;margin:0;}
+  .result-sub a{color:var(--blue);text-decoration:none;}
+  .result-sub a:hover{text-decoration:underline;}
+  .tag{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;margin-inline-end:6px;
+       font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;letter-spacing:.03em;}
+  .tag.exact{background:rgba(61,220,132,.14);color:var(--green);border:1px solid rgba(61,220,132,.3);}
+  .tag.estimate{background:rgba(245,166,35,.14);color:var(--amber);border:1px solid rgba(245,166,35,.3);}
+  .tag.blocked{background:rgba(255,59,48,.14);color:#ff6b5e;border:1px solid rgba(255,59,48,.3);}
+  .tag.online{background:rgba(0,122,255,.14);color:#4da6ff;border:1px solid rgba(0,122,255,.3);}
+  .tag.fleet{background:rgba(61,220,132,.14);color:var(--green);border:1px solid rgba(61,220,132,.3);}
+
+  .notice{border-radius:12px;padding:14px 16px;font-size:13.5px;line-height:1.8;margin-bottom:14px;}
+  .notice.info{background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.25);color:#f2c98a;}
+  .notice.danger{background:rgba(255,59,48,.08);border:1px solid rgba(255,59,48,.25);color:#ff9d95;}
+  .notice.online{background:rgba(0,122,255,.08);border:1px solid rgba(0,122,255,.25);color:#6db4ff;}
+
+  .stopbar-table{width:100%;border-collapse:collapse;margin-top:6px;}
+  .stopbar-table th{text-align:start;font-size:11.5px;color:var(--muted);font-weight:700;padding:8px 10px;
+       border-bottom:1px solid var(--line);text-transform:uppercase;letter-spacing:.05em;}
+  .stopbar-table td{padding:10px;font-size:13px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.7;}
+  .stopbar-table tr:last-child td{border-bottom:none;}
+  .stopbar-table td.letter{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;font-weight:800;color:var(--amber);font-size:15px;
+       width:44px;text-align:center;}
+  .stopbar-table tr.hl td{background:rgba(245,166,35,.08);}
+  .stopbar-table tr.hl td.letter{color:#fff;background:var(--amber);border-radius:8px;}
+
+  .footer-note{font-size:11.5px;color:var(--muted);text-align:center;margin-top:20px;line-height:1.9;}
+  .footer-note code{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;background:var(--panel);padding:1px 5px;border-radius:4px;}
+
+  .ac-info{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:12px;margin-top:10px;
+       font-size:13px;display:grid;grid-template-columns:auto 1fr;gap:8px 14px;}
+  .ac-info .label{color:var(--muted);font-weight:600;}
+  .ac-info .value{color:var(--text);font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;word-break:break-word;}
+
+  .install-hint{display:none;background:rgba(0,122,255,.08);border:1px solid rgba(0,122,255,.25);color:#6db4ff;
+       border-radius:12px;padding:12px 16px;font-size:12.5px;line-height:1.7;margin-bottom:18px;
+       align-items:center;gap:10px;}
+  .install-hint.show{display:flex;}
+  .install-hint .close-hint{margin-inline-start:auto;background:none;border:none;color:#6db4ff;font-size:18px;
+       cursor:pointer;line-height:1;padding:4px;flex-shrink:0;}
+
+  ::placeholder{color:#5a7284;}
+
+  @media (max-width:480px){
+    .light-card{padding:16px;gap:14px;}
+    .light{width:60px;height:60px;font-size:20px;}
+    .result-main{font-size:17px;}
+    h1{font-size:19px;}
+  }
+</style>
+</head>
+<body class="lang-en">
+<div class="wrap">
+
+  <div class="install-hint" id="installHint">
+    <span data-i18n="installBanner">📱 Tip: tap your browser's <b>Share</b> (iOS) or <b>menu</b> (Android) button, then choose <b>"Add to Home Screen"</b> to use this tool like an app — even offline.</span>
+    <button class="close-hint" id="closeHint" data-i18n-aria="closeAria" aria-label="Dismiss">×</button>
+  </div>
+
+  <div class="hdr">
+    <button class="lang-toggle" id="langToggle" type="button">AR · العربية</button>
+    <div class="rj-badge">RJ AIRLINES <span data-i18n="badgeSuffix">· internal tool</span></div>
+    <div class="hdr-top">
+      <div>
+        <div class="eyebrow"><span class="dot"></span> AIRSIDE · GROUND OPERATIONS</div>
+        <h1 data-i18n="h1">Stop Bar Assignment System</h1>
+        <p class="sub" data-i18n="sub">Enter the stand number and aircraft type or registration to find the assigned stop bar.</p>
+      </div>
+      <div class="manual-ref" data-i18n="manualRef">QAIA-COO-OPS-AIR-MAN-001-10<br>p. 116–260</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2><span class="num">1</span> <span data-i18n="panel1Title">Select aircraft &amp; stand details</span></h2>
+    <div class="grid3">
+      <div>
+        <label for="standInput" data-i18n="standLabel">Stand Number</label>
+        <input type="text" id="standInput" list="standList" placeholder="e.g. S02 or N14" data-i18n-placeholder="standPlaceholder" autocomplete="off" autocapitalize="characters">
+        <datalist id="standList"></datalist>
+        <div class="stand-meta" id="standMeta"></div>
+      </div>
+      <div>
+        <label for="regInput" data-i18n="regLabel">🔍 Registration</label>
+        <input type="text" id="regInput" list="regList" placeholder="e.g. JY-RAZ or N12345" data-i18n-placeholder="regPlaceholder" autocomplete="off" autocapitalize="characters">
+        <datalist id="regList"></datalist>
+      </div>
+      <div>
+        <label for="acInput" data-i18n="acLabel">or Aircraft Type</label>
+        <input type="text" id="acInput" list="acList" placeholder="e.g. A320 or B787" data-i18n-placeholder="acPlaceholder" autocomplete="off" autocapitalize="characters">
+        <datalist id="acList"></datalist>
+      </div>
+    </div>
+  </div>
+
+  <div class="result" id="resultBox"></div>
+
+  <div class="panel" id="fullTablePanel" style="display:none;">
+    <h2><span class="num">2</span> <span data-i18n="panel2Title">All stop bars for this stand</span></h2>
+    <table class="stopbar-table" id="fullTable"></table>
+  </div>
+
+  <div class="panel">
+    <h2><span class="num">3</span> <span data-i18n="panel3Title">ICAO Aircraft Type Reference (offline)</span></h2>
+    <input type="text" id="refSearch" placeholder="Search e.g. A320, 777, Embraer..." data-i18n-placeholder="refSearchPlaceholder" autocomplete="off" style="margin-bottom:12px;">
+    <div style="max-height:340px;overflow-y:auto;border-radius:10px;border:1px solid var(--line);">
+      <table class="stopbar-table" id="refTable" style="margin-top:0;"></table>
+    </div>
+    <p class="stand-meta" id="refCount" style="margin-top:10px;"></p>
+  </div>
+
+  <p class="footer-note" data-i18n="footerNote">
+    When a type is not explicitly listed in the stand's guide, the system estimates the stop bar based on <code>ICAO Aircraft Code</code>, matching it to the closest type group sharing the same code at that stand. <b>The system also supports registration lookup and automatic online search</b> for unlisted aircraft.
+    <br><br>
+    This tool was built specifically for <b>RJ AIRLINES</b> — for internal use only, and is not a substitute for the official ground operations manual QAIA-COO-OPS-AIR-MAN-001-10.
+  </p>
+
+</div>
+
+<script>
+// ===================== I18N =====================
+let LANG = 'en';
+
+const I18N = {
+  en: {
+    pageTitle: "RJ AIRLINES | Stop Bar Assignment System — Queen Alia International Airport",
+    badgeSuffix: "· internal tool",
+    closeAria: "Dismiss",
+    h1: "Stop Bar Assignment System",
+    sub: "Enter the stand number and aircraft type or registration to find the assigned stop bar.",
+    manualRef: "QAIA-COO-OPS-AIR-MAN-001-10<br>p. 116–260",
+    panel1Title: "Select aircraft &amp; stand details",
+    standLabel: "Stand Number",
+    standPlaceholder: "e.g. S02 or N14",
+    regLabel: "🔍 Registration",
+    regPlaceholder: "e.g. JY-RAZ or N12345",
+    acLabel: "or Aircraft Type",
+    acPlaceholder: "e.g. A320 or B787",
+    panel2Title: "All stop bars for this stand",
+    panel3Title: "ICAO Aircraft Type Reference (offline)",
+    refSearchPlaceholder: "Search e.g. A320, 777, Embraer...",
+    refColIcao: "ICAO Code",
+    refColType: "Aircraft Type",
+    refColCode: "ARC",
+    refCount: n => `${n} aircraft types available offline`,
+    refNoResults: "No matching aircraft type found in the offline database.",
+    footerNote: 'When a type is not explicitly listed in the stand\'s guide, the system estimates the stop bar based on <code>ICAO Aircraft Code</code>, matching it to the closest type group sharing the same code at that stand. <b>The system also supports registration lookup and automatic online search</b> for unlisted aircraft.<br><br>This tool was built specifically for <b>RJ AIRLINES</b> — for internal use only, and is not a substitute for the official ground operations manual QAIA-COO-OPS-AIR-MAN-001-10.',
+    installBanner: '📱 Tip: tap your browser\'s <b>Share</b> (iOS) or <b>menu</b> (Android) button, then choose <b>"Add to Home Screen"</b> to use this tool like an app — even offline.',
+    langToggleLabel: "AR · العربية",
+    standTypeLabel: "Stand type:",
+    maxCodeLabel: "Max aircraft code:",
+    excludedLabel: "Excluded types:",
+    tableStopBar: "Stop Bar",
+    tableTypes: "Aircraft Types",
+    standNotFound: "No stand found with this number. Please check the stand number is entered correctly (e.g. S02, N14, 28A, C1).",
+    searchingTag: "Searching for registration...",
+    searchingMain: reg => `Looking up ${reg} in global aircraft databases`,
+    searchingSub: "Please wait...",
+    regNotFound: reg => `❌ Registration <b>${reg}</b> was not found in any available database.`,
+    regNotFoundIntro: "Please:",
+    regNotFoundList: [
+      "Double-check the registration is entered correctly",
+      "Or enter the aircraft type manually in the dedicated field",
+      "Or contact Operations for the information"
+    ],
+    tagFleet: "✈️ RJ Fleet",
+    tagOnline: "🌐 Found via online search",
+    tagExact: "Exact match from manual",
+    stopBarMain: (letter, standKey) => `Stop Bar <span class="badge">${letter}</span> — Stand ${standKey}`,
+    exactSub: token => `The entered type matches the type listed in the manual: <b>${token}</b>`,
+    acInfoReg: "Registration:",
+    acInfoType: "Aircraft type:",
+    acInfoSeq: "Sequence:",
+    acInfoOperator: "Operator:",
+    acInfoSource: "Source:",
+    tagBlocked: "Not Permitted",
+    excludedMain: standKey => `This type is excluded from stand ${standKey}`,
+    excludedSub: excl => `The manual explicitly excludes: <b>${excl}</b>. Please check an alternative stand suitable for this type.`,
+    tagAll: "Single stop bar for all types",
+    allMain: standKey => `Stop Bar <span class="badge">ALL</span> — Stand ${standKey}`,
+    allSub: (allText, maxCode) => `This stand uses a single stop bar for all types (${allText}), up to max code ${maxCode||'—'}.`,
+    tagIncompatible: "Not Compatible",
+    incompatibleMain: (qCode, standKey, maxCode) => `Aircraft code (${qCode}) exceeds the max allowed code for stand ${standKey} (${maxCode})`,
+    incompatibleSub: "This type cannot use this stand according to the ground operations manual.",
+    tagFleetEst: "✈️ RJ Fleet — estimated",
+    tagOnlineEst: "🌐 Found via online search — estimated",
+    tagAutoEst: "Automatic estimate — not explicitly listed in manual",
+    suggestedMain: (letter, standKey) => `Suggested Stop Bar <span class="badge">${letter}</span> — Stand ${standKey}`,
+    estimatedSub: qCode => `Estimated based on aircraft code (${qCode}). <b>⚠️ Please verify with Airport Operations before operational use.</b>`,
+    notRecognized: "❌ Aircraft type not recognized. Please check the entered data or contact Operations."
+  },
+  ar: {
+    pageTitle: "آر جي إيرلاينز | نظام تخصيص خطوط التوقف (Stop Bar) — مطار الملكة علياء الدولي",
+    badgeSuffix: "· برنامج داخلي",
+    closeAria: "إغلاق",
+    h1: "نظام تخصيص خطوط التوقف (Stop Bar)",
+    sub: "أدخل رقم الموقف ونوع الطائرة أو رقم التسجيل لمعرفة خط التوقف المخصص.",
+    manualRef: "QAIA-COO-OPS-AIR-MAN-001-10<br>ص. 116–260",
+    panel1Title: "اختر بيانات الطائرة والموقف",
+    standLabel: "رقم الموقف (Stand)",
+    standPlaceholder: "مثال: S02 أو N14",
+    regLabel: "🔍 رقم التسجيل (Registration)",
+    regPlaceholder: "مثال: JY-RAZ أو N12345",
+    acLabel: "أو نوع الطائرة (Aircraft Type)",
+    acPlaceholder: "مثال: A320 أو B787",
+    panel2Title: "جميع خطوط التوقف لهذا الموقف",
+    panel3Title: "مرجع أنواع الطائرات وأكواد ICAO (بدون إنترنت)",
+    refSearchPlaceholder: "ابحث مثال: A320, 777, Embraer...",
+    refColIcao: "كود ICAO",
+    refColType: "نوع الطائرة",
+    refColCode: "كود ARC",
+    refCount: n => `${n} نوع طائرة متاح دون اتصال بالإنترنت`,
+    refNoResults: "لا يوجد نوع طائرة مطابق في قاعدة البيانات المتوفرة دون إنترنت.",
+    footerNote: 'عند عدم وجود الطراز مذكوراً صراحةً ضمن دليل الموقف، يقوم النظام بتقدير خط التوقف اعتماداً على <code>كود الطائرة (ICAO Code)</code> ومطابقته مع أقرب مجموعة طرازات من نفس الكود ضمن نفس الموقف. <b>النظام يدعم الآن البحث برقم التسجيل والبحث التلقائي على الإنترنت</b> عن الطائرات غير المعروفة.<br><br>هذا البرنامج أُعِدّ خصيصاً لـ <b>RJ AIRLINES</b> — للاستخدام الداخلي فقط، ولا يُعد بديلاً عن دليل العمليات الأرضية الرسمي QAIA-COO-OPS-AIR-MAN-001-10.',
+    installBanner: '📱 نصيحة: اضغط على زر <b>المشاركة (Share)</b> في آيفون أو <b>قائمة المتصفح</b> في أندرويد، ثم اختر <b>"إضافة إلى الشاشة الرئيسية"</b> لاستخدام هذه الأداة كتطبيق — حتى بدون إنترنت.',
+    langToggleLabel: "EN · English",
+    standTypeLabel: "نوع الموقف:",
+    maxCodeLabel: "أقصى كود طائرة:",
+    excludedLabel: "طرازات مستثناة:",
+    tableStopBar: "خط التوقف",
+    tableTypes: "الطرازات",
+    standNotFound: "لم يتم العثور على موقف بهذا الرقم. تأكد من كتابة رقم الموقف بشكل صحيح (مثال: S02، N14، 28A، C1).",
+    searchingTag: "جاري البحث عن رقم التسجيل...",
+    searchingMain: reg => `يتم البحث عن ${reg} عبر قواعد البيانات العالمية`,
+    searchingSub: "الرجاء الانتظار...",
+    regNotFound: reg => `❌ لم يتم العثور على رقم التسجيل <b>${reg}</b> في أي قاعدة بيانات متاحة.`,
+    regNotFoundIntro: "يرجى:",
+    regNotFoundList: [
+      "التأكد من كتابة رقم التسجيل بشكل صحيح",
+      "أو إدخال نوع الطائرة يدوياً في الحقل المخصص",
+      "أو الاتصال بقسم العمليات للحصول على المعلومات"
+    ],
+    tagFleet: "✈️ من أسطول RJ",
+    tagOnline: "🌐 تم البحث عبر الإنترنت",
+    tagExact: "مطابقة مباشرة من الدليل",
+    stopBarMain: (letter, standKey) => `خط التوقف <span class="badge">${letter}</span> — موقف ${standKey}`,
+    exactSub: token => `الطراز المُدخل مطابق للطراز المُدرج في الدليل: <b>${token}</b>`,
+    acInfoReg: "رقم التسجيل:",
+    acInfoType: "نوع الطائرة:",
+    acInfoSeq: "التسلسل:",
+    acInfoOperator: "المشغل:",
+    acInfoSource: "المصدر:",
+    tagBlocked: "غير مسموح",
+    excludedMain: standKey => `هذا الطراز مستثنى من موقف ${standKey}`,
+    excludedSub: excl => `الدليل يستثني صراحةً: <b>${excl}</b>. يرجى مراجعة موقف بديل مناسب لهذا الطراز.`,
+    tagAll: "خط توقف واحد لجميع الطرازات",
+    allMain: standKey => `خط التوقف <span class="badge">ALL</span> — موقف ${standKey}`,
+    allSub: (allText, maxCode) => `هذا الموقف يستخدم خط توقف واحد لجميع الطرازات (${allText})، بحد أقصى كود ${maxCode||'—'}.`,
+    tagIncompatible: "غير متوافق",
+    incompatibleMain: (qCode, standKey, maxCode) => `كود الطائرة (${qCode}) أكبر من أقصى كود مسموح لموقف ${standKey} (${maxCode})`,
+    incompatibleSub: "لا يمكن لهذا الطراز استخدام هذا الموقف بحسب دليل العمليات.",
+    tagFleetEst: "✈️ من أسطول RJ - تقدير",
+    tagOnlineEst: "🌐 تم البحث عبر الإنترنت - تقدير",
+    tagAutoEst: "تقدير آلي — غير مذكور صراحةً بالدليل",
+    suggestedMain: (letter, standKey) => `خط التوقف المقترح <span class="badge">${letter}</span> — موقف ${standKey}`,
+    estimatedSub: qCode => `تم التقدير بالاعتماد على كود الطائرة (${qCode}). <b>⚠️ يرجى التحقق من قسم عمليات المطار قبل الاعتماد التشغيلي.</b>`,
+    notRecognized: "❌ لم يتم التعرف على طراز الطائرة. يرجى التأكد من البيانات المُدخلة أو الاتصال بقسم العمليات."
+  }
+};
+
+function tr(key, ...args){
+  const entry = I18N[LANG][key];
+  if(entry===undefined) return '';
+  return typeof entry==='function' ? entry(...args) : entry;
+}
+
+function applyStaticLanguage(){
+  const t = I18N[LANG];
+  document.documentElement.lang = LANG;
+  document.documentElement.dir = LANG==='ar' ? 'rtl' : 'ltr';
+  document.body.className = 'lang-' + LANG;
+  document.title = t.pageTitle;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    if(t[key]!==undefined) el.innerHTML = t[key];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+    const key = el.getAttribute('data-i18n-placeholder');
+    if(t[key]!==undefined) el.placeholder = t[key];
+  });
+  document.querySelectorAll('[data-i18n-aria]').forEach(el=>{
+    const key = el.getAttribute('data-i18n-aria');
+    if(t[key]!==undefined) el.setAttribute('aria-label', t[key]);
+  });
+  const btn = document.getElementById('langToggle');
+  if(btn) btn.textContent = t.langToggleLabel;
+}
+
+// RJ FLEET DATABASE
+const RJ_FLEET = {
+  "JY-RAZ": {type: "A321-231", seq: 1},
+  "JY-AYR": {type: "A320-232", seq: 2},
+  "JY-BAA": {type: "B787-8", seq: 3},
+  "JY-BAB": {type: "B787-8", seq: 4},
+  "JY-BAC": {type: "B787-8", seq: 5},
+  "JY-BAE": {type: "B787-8", seq: 6},
+  "JY-BAF": {type: "B787-8", seq: 7},
+  "JY-BAG": {type: "B787-8", seq: 8},
+  "JY-BAH": {type: "B787-8", seq: 9},
+  "JY-REA": {type: "ERJ-195-E2", seq: 10},
+  "JY-REB": {type: "ERJ-195-E2", seq: 11},
+  "JY-REF": {type: "ERJ-195-E2", seq: 12},
+  "JY-REG": {type: "ERJ-195-E2", seq: 13},
+  "JY-REC": {type: "ERJ-190-E2", seq: 14},
+  "JY-RED": {type: "ERJ-190-E2", seq: 15},
+  "JY-REE": {type: "ERJ-190-E2", seq: 16},
+  "JY-REH": {type: "ERJ-195-E2", seq: 17},
+  "JY-RAD": {type: "A320-271", seq: 18},
+  "JY-RAE": {type: "A320-271", seq: 19},
+  "JY-RAN": {type: "A320-271", seq: 20},
+  "JY-RAA": {type: "A320-271", seq: 21},
+  "JY-RAB": {type: "A320-271", seq: 22},
+  "JY-RAC": {type: "A320-271", seq: 23},
+  "JY-RAH": {type: "A320-271", seq: 24},
+  "JY-RAI": {type: "A320-271", seq: 25},
+  "JY-RAQ": {type: "A320-271", seq: 26},
+  "JY-RAG": {type: "A320-271", seq: 27},
+  "JY-RAJ": {type: "A320-271", seq: 28},
+  "JY-RAK": {type: "A320-271", seq: 29},
+  "JY-RAL": {type: "A320-271", seq: 30},
+  "JY-RAF": {type: "A320-271", seq: 31},
+  "JY-RAM": {type: "A321-271", seq: 32},
+  "JY-RAO": {type: "A321-271", seq: 33},
+  "JY-RBA": {type: "B787-9", seq: 34},
+  "JY-RBC": {type: "B787-9", seq: 35}
+};
+
+// ALL STANDS DATA (COMPLETE)
+const STANDS = {"S02": {"stand_type": "Remote", "max_code": "C", "excluded": "-", "stopbars": {"A": "MD82, MD90", "B": "A321, B727-200/W, B737-800/W, B737-900/ER/W/ERW, B737-MAX series, B737-BBJ2/BBJ3, F100, A220-100/300, EMB195-E2", "C": "A318, A319, A320, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/W, B737-BBJ, ATR, EMB170LR/SU/SE/STD, EMB175LR/STD/E2, EMB190AR/LR/STD/E2, EMB195AR/LR/STD With no fuel pit available: CRJ-900/ER/LR"}}, "S05": {"stand_type": "Remote", "max_code": "C", "excluded": "-", "stopbars": {"A": "MD82, MD90", "B": "A321, B727-200/W, B737-800/W, B737-900/ER/W/ERW, B737-MAX series, B737-BBJ2/BBJ3, F100, A220-100/300, EMB195-E2", "C": "A318, A319, A320, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/W, B737-BBJ, ATR, EMB170LR/SU/SE/STD, EMB175LR/STD/E2, EMB190AR/LR/STD/E2, EMB195AR/LR/STD With no fuel pit available: CRJ-900/ER/LR"}}, "S07": {"stand_type": "Remote", "max_code": "C", "excluded": "-", "stopbars": {"A": "MD82, MD90", "B": "A321, B727-200/W, B737-800/W, B737-900/ER/W/ERW, B737-MAX series, B737-BBJ2/BBJ3, F100, A220-100/300, EMB195-E2", "C": "A318, A319, A320, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/W, B737-BBJ, ATR, EMB170LR/SU/SE/STD, EMB175LR/STD/E2, EMB190AR/LR/STD/E2, EMB195AR/LR/STD With no fuel pit available: CRJ-900/ER/LR"}}, "S09": {"stand_type": "Remote", "max_code": "C", "excluded": "-", "stopbars": {"A": "MD82, MD90", "B": "A321, B727-200/W, B737-800/W, B737-900/ER/W/ERW, B737-MAX series, B737-BBJ2/BBJ3, F100, A220-100/300, EMB195-E2", "C": "A318, A319, A320, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/W, B737-BBJ, ATR, EMB170LR/SU/SE/STD, EMB175LR/STD/E2, EMB190AR/LR/STD/E2, EMB195AR/LR/STD With no fuel pit available: CRJ-900/ER/LR"}}, "S11": {"stand_type": "Remote", "max_code": "C", "excluded": "-", "stopbars": {"A": "MD82, MD90", "B": "A321, B727-200/W, B737-800/W, B737-900/ER/W/ERW, B737-MAX series, B737-BBJ2/BBJ3, F100, A220-100/300, EMB195-E2", "C": "A318, A319, A320, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/W, B737-BBJ, ATR, EMB170LR/SU/SE/STD, EMB175LR/STD/E2, EMB190AR/LR/STD/E2, EMB195AR/LR/STD With no fuel pit available: CRJ-900/ER/LR"}}, "S13": {"stand_type": "Remote", "max_code": "C", "excluded": "-", "stopbars": {"A": "MD82, MD90", "B": "A321, B727-200/W, B737-800/W, B737-900/ER/W/ERW, B737-MAX series, B737-BBJ2/BBJ3, F100, A220-100/300, EMB195-E2", "C": "A318, A319, A320, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/W, B737-BBJ, ATR, EMB170LR/SU/SE/STD, EMB175LR/STD/E2, EMB190AR/LR/STD/E2, EMB195AR/LR/STD With no fuel pit available: CRJ-900/ER/LR"}}, "S15": {"stand_type": "Remote –", "max_code": "C", "excluded": "-", "stopbars": {"A": "MD82, MD90", "B": "A321, B727-200/W, B737-800/W, B737-900/ER/W/ERW, B737-MAX series, B737-BBJ2/BBJ3, F100, A220-100/300, EMB195-E2", "C": "A318, A319, A320, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/W, B737-BBJ, ATR, EMB170LR/SU/SE/STD, EMB175LR/STD/E2, EMB190AR/LR/STD/E2, EMB195AR/LR/STD With no fuel pit available: CRJ-900/ER/LR", "E": "Aircrafts codes A & B"}}, "S17": {"stand_type": "Remote", "max_code": "C", "excluded": "-", "stopbars": {"A": "MD82, MD90", "B": "A321, B727-200/W, B737-800/W, B737-900/ER/W/ERW, B737-MAX series, B737-BBJ2/BBJ3, F100, A220-100/300, EMB195-E2", "C": "A318, A319, A320, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/W, B737-BBJ, ATR, EMB170LR/SU/SE/STD, EMB175LR/STD/E2, EMB190AR/LR/STD/E2, EMB195AR/LR/STD With no fuel pit available: CRJ-900/ER/LR"}}, "S19": {"stand_type": "Remote", "max_code": "C", "excluded": "-", "stopbars": {"A": "MD82, MD90", "B": "A321, B727-200/W, B737-800/W, B737-900/ER/W/ERW, B737-MAX series, B737-BBJ2/BBJ3, F100, A220-100/300, EMB195-E2", "C": "A318, A319, A320, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/W, B737-BBJ, ATR, EMB170LR/SU/SE/STD, EMB175LR/STD/E2, EMB190AR/LR/STD/E2, EMB195AR/LR/STD With no fuel pit available: CRJ-900/ER/LR"}}, "S21": {"stand_type": "Remote", "max_code": "C", "excluded": "-", "stopbars": {"A": "MD82, MD90", "B": "A321, B727-200/W, B737-800/W, B737-900/ER/W/ERW, B737-MAX series, B737-BBJ2/BBJ3, F100, A220-100/300, EMB195-E2", "C": "A318, A319, A320, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/W, B737-BBJ, ATR, EMB170LR/SU/SE/STD, EMB175LR/STD/E2, EMB190AR/LR/STD/E2, EMB195AR/LR/STD With no fuel pit available: CRJ-900/ER/LR"}}, "S23": {"stand_type": "Remote", "max_code": "C", "excluded": "-", "stopbars": {"A": "MD82, MD90", "B": "A321, B727-200/W, B737-800/W, B737-900/ER/W/ERW, B737-MAX series, B737-BBJ2/BBJ3, F100, A220-100/300, EMB195-E2", "C": "A318, A319, A320, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/W, B737-BBJ, ATR, EMB170LR/SU/SE/STD, EMB175LR/STD/E2, EMB190AR/LR/STD/E2, EMB195AR/LR/STD With no fuel pit available: CRJ-900/ER/LR"}}, "S25": {"stand_type": "Remote", "max_code": "C", "excluded": "-", "stopbars": {"A": "MD82, MD90", "B": "A321, B727-200/W, B737-800/W, B737-900/ER/W/ERW, B737-MAX series, B737-BBJ2/BBJ3, F100, A220-100/300, EMB195-E2", "C": "A318, A319, A320, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/W, B737-BBJ, ATR, EMB170LR/SU/SE/STD, EMB175LR/STD/E2, EMB190AR/LR/STD/E2, EMB195AR/LR/STD With no fuel pit available: CRJ-900/ER/LR"}}, "S04": {"stand_type": "Contact", "max_code": "C", "excluded": "B727-200/W, MD80/90; DC9, ATR, CRJ, DH8, F100, EMB 135/145.", "stopbars": {"A": "A321", "B": "B737-800/W, B737-900/ER/ERW/W, B737-BBJ2/W, B737-BBJ3/W, B737-MAX series,A220-100/300, EMB195-E2", "C": "A318, A319, A320, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/C/ER/W, B737-BBJ/W, EMB170LR/SU/SE/STD, EMB175LR/STD/E2, EMB190AR/LR/STD/E2, EMB195AR/LR/STD"}}, "S06": {"stand_type": "Contact", "max_code": "E", "excluded": "Code A, B and B727-200/W, MD80/90; DC9, ATR, CRJ, DH8, F100, EMB 135/145.", "stopbars": {"A": "A340-600, B777-300/ER, A350-1000, B787-1000.", "B": "A330-300, A340-300, A340-500, A350-900, B787-900, B747-400/ER, B767-400ER, MD11", "C": "B787-800", "D": "A330-200, A340-200,, B757-300/W, B767-200/ER, B767-300/ER/ERW, B777-200/ER/LR, DC10-30,", "E": "A300-600R, A310-200, A310-300, B757-200/W, A318, A319, A320, A321, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/W, B737-BBJ, B737-800/W, B737-900/W/ER/ERW, B737-BBJ2/BBJ3,B737-MAX series, EMB175LR/STD/E2, EMB190AR/LR/STD/E2, EMB195AR/LR/STD/E2, A220-100/300 With no fuel pit available: EMB170LR/SU/SE/STD, EMB175LR/STD, F100"}}, "S08": {"stand_type": "Contact MARS", "max_code": "C", "excluded": "A318, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/W, B737-BBJ, B737-800/W, B737-900/W/ER/ERW, B737-BBJ2/BBJ3, MD80/90; DC9, ATR, CRJ, DH8, EMB170LR/SU/SE/STD,EMB175LR/STD, F100, B727 Series", "stopbars": {"A": "A321, ,A220-100/300, EMB195-E2", "B": "All code C except A321 & types mentioned above"}}, "S10": {"stand_type": "Contact MARS", "max_code": "E", "excluded": "Codes A, B & C", "stopbars": {"A": "A340-600, B777-300/ER, A350-1000", "B": "A330-200, A330-300, A340-200, A340-300, A340-500,, A350-900, B747-400/ER, B757-300/W, B767-200/ER, B767-300/ER/ERW, B767-400ER, B777-200/ER/LR, B787-8, B787-9, MD11, DC10-30, B787-1000", "C": "A300-600R, A310-200, A310-300, B757-200/W"}}, "S12": {"stand_type": "Contact MARS", "max_code": "C", "excluded": "B727-200/W, MD80/90; DC9, ATR, CRJ, DH8, F100, EMB 135/145, B727 Series", "stopbars": {"A": "All code C except types mentioned above"}}, "S14": {"stand_type": "Contact MARS", "max_code": "C", "excluded": "MD80/90, DC9, ATR, CRJ, DH8,F100, EMB family,B737 series and B727 series..", "stopbars": {"A": "A321, ,A220-100/300, EMB195-E2", "B": "All code C except A321 & types mentioned above"}}, "S16": {"stand_type": "Contact MARS", "max_code": "E", "excluded": "Codes A, B & C", "stopbars": {"A": "A340-600, B777-300/ER, B787-1000, A350-1000", "B": "A330-200, A330-300, A340-200, A340-300, A340-500,, A350-900, B747-400/ER, B757-300/W, B767-200/ER, B767-300/ER/ERW, B767-400ER, B777-200/ER/LR, B787-8, B787-9, MD11, DC10-30", "C": "A300-600R, A310-200, A310-300, B757-200/W"}}, "S18": {"stand_type": "Contact MARS", "max_code": "C", "excluded": "MD80/90, DC9, ATR, CRJ, DH8, F100, , B737 series and B727 series", "stopbars": {"ALL": "All code C except types mentioned above"}}, "S20": {"stand_type": "Contact", "max_code": "C", "excluded": "EMBRAER 135, EMBRAER 145, ATR42, ATR72, CRJ, CRJ700, CRJ1000, MD82, MD83, MD87, MD88, MD90, F100, B717, B727 series", "stopbars": {"A": "A321-100, A321-200", "B": "B737-800, B737-800W, B737-900, B737-900ER, B737-900ERW, B737-900W, B737-BBJ2, B737-BBJ2W, B737-BBJ3, B737-BBJ3W, B737-MAX series,A220-100/300, EMB195-E2", "C": "A318, A319, A320-200, B737-200, B737-300, B737-300W, B737-400, B737-500, B737-500W, B737-600, B737-700, B737-700C, B737-700ER, B737-700W, B737-BBJ, B737-BBJW, EMBRAER 170LR/SU/SE/STD/E2, EMBRAER 175 LR/STD/E2, EMBRAER 190 AR/LR/STD/E2, , EMBRAER 195 AR/LR/STD, CRJ-900, CRJ-900 ER, CRJ-900 LR, CRJ-900 Original"}}, "S22": {"stand_type": "Contact MARS", "max_code": "C", "excluded": "EMBRAER 135, EMBRAER 145, ATR42, ATR72, CRJ, CRJ700, CRJ1000, MD82, MD83, MD87, MD88, MD90, F100, B717, B727 series.", "stopbars": {"A": "A321-200, B737-900ERW, A321-100, B737-800, B737-800W, B737-900, B737-900ER, B737-900W, B737-BBJ3, B737-BBJ3W, A321 CFM-S, A321 IAE-S, A321NEO-CFM, A321 NEO-PW, B737-Max series, A220-100/300, EMB195-E2", "B": "A318, A318 CFM-S, B737-BBJ2, B737-BBJ2W, A320-200, B737-200, B737-300,B737-300W, B737-400, B737-500, B737-500W, B737-600, B737-700, B737-700C, B737-700ER, B737-700W, B737-BBJ, B737-BBJW, EMBRAER 170 LR/SU/SE, EMBRAER 170 STD, EMB 175 LR/STD/E2, EMB 190 AR/LR/STD/E2, EMBRAER 195 AR, EMBRAER 195LR, EMBRAER 195 STD, A319 CFM-S, A319 IAE-S, A319 NEO-CFM, A319 NEOPW,A320 CFM-S, A320 IAE-S, A320 NEO-CFM, A320 NEO-PW, A319, A320-100,A318 PW-S"}}, "S24": {"stand_type": "Contact MARS", "max_code": "E", "excluded": "Aircrafts code A, B, C", "stopbars": {"A": "A340-600, B777-300, B777-300ER, A350-1000", "B": "B787-9, B767-300, B767-300ER, B767-300ERW, A330-300, A340-300, A340-500, B747-400, B747-400 Combi, B747-400ER, MD 11, A350-900, B747-200, B747300, B767-400ER", "C": "B787-8, A300-600R, A340-200, B757-200, B757-200W, A330-200, B757-300, B757-300W, B767-200, B767-200ER, B777-200, B777-200ER, B777-200LR, DC 10-30,, A310-200, A310-300"}}, "S26": {"stand_type": "Contact MARS", "max_code": "C", "excluded": "EMBRAER 135, EMBRAER 145, ATR42, ATR72, CRJ, CRJ700, CRJ1000, MD82, MD83, MD87, MD88, MD90, F100, B717, B727 series", "stopbars": {"A": "All except types mentioned above"}}, "S28": {"stand_type": "Contact MARS", "max_code": "C", "excluded": "EMBRAER 135, EMBRAER 145, ATR42, ATR72, CRJ, CRJ700, CRJ1000, MD82, MD83, MD87, MD88, MD90, F100, B717, B727 series.", "stopbars": {"A": "A321-200, B737-900ERW, A321-100, B737-MAX series, B737-800, B737-800W, B737-900, B737900ER, B737-900W, B737-BBJ3, B737-BBJ3W, A321 CFM-S, A321 IAE-S, A321 NEO-CFM, A321 NEO-PW A220-100/300, EMB195-E2", "B": "A318, A318 CFM-S, B737-BBJ2, B737-BBJ2W, A320-200, B737-200, B737-300,B737-300W, B737-400, B737-500, B737-500W, B737-600, B737-700, B737-700C, B737-700ER, B737-700W, B737-BBJ, B737-BBJW, EMBRAER 170 LR/SU/SE, EMBRAER 170 STD, EMB 175 LR/STD/E2, EMB 190 AR/LR/STD/E2, EMBRAER 195 AR, EMBRAER 195LR, EMBRAER 195 STD, A319 CFM-S, A319 IAE-S, A319 NEO-CFM, A319 NEOPW,A320 CFM-S, A320 IAE-S, A320 NEO-CFM, A320 NEO-PW, A319, A320-100,A318 PW-S"}}, "S30": {"stand_type": "Contact MARS", "max_code": "F", "excluded": "ANT 124, A225, B747-8,and Aircrafts codes A, B & C.", "stopbars": {"A": "A340-600, B777-300, B777-300ER, A350-1000, A380-8", "B": "B787-9, B767-300, B767-300ER, B767-300ERW, A330-300, A340-300, A340-500, B747-400, B747-400 Combi, B747-400ER, MD 11, A350-900, B747-200, B747300, B767-400ER", "C": "B787-8, A300-600R, A340-200, B757-200, B757-200W, A330-200, B757-300, B757-300W, B767-200, B767-200ER, B777-200, B777-200ER, B777-200LR, DC 10-30,, A310-200, A310-300"}}, "S32": {"stand_type": "Contact MARS", "max_code": "C", "excluded": "EMB 135, EMB 145, ATR42, AT72, CRJ700, CRJ900, CRJ1000, F100, MD82/MD83/MD87/MD88/MD90-30/B717-200, B727 Series", "stopbars": {"A": "All except types mentioned above"}}, "N01": {"stand_type": "Remote", "max_code": "C", "excluded": "A321 Series, B737-900, MD80/90; DC9, CRJ, DH8, EMB195 E1/E2, B727 Family & B737 MAX", "stopbars": {"A": "B737-800/W, B737-BBJ2, F100, ,A220-300", "B": "A318, A319, A320, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/W, B737-BBJ, ATR, EMB170 LR/SU/SE/STD, EMB175 LR/STD/E2, EMB190 AR/LR/STD/E2, A220-100"}}, "N03": {"stand_type": "Remote", "max_code": "C", "excluded": "MD80/90; DC9, DH8, B727 Family", "stopbars": {"A": "A321, B737-900/W, B737-800/W, B737-BBJ2/BBJ3, B737-MAX series, F100,A220-300, EMB195-E2", "B": "A220-100, A318, A319, A320, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/W, B737-BBJ, ATR, EMB170 LR/SU/SE/STD, EMB175 LR/STD/E2, EMB190 AR/LR/STD/E2, With no fuel pit available: CRJ-900/ER/LR"}}, "N05": {"stand_type": "Remote", "max_code": "C", "excluded": "MD80/90; DC9, DH8, B727 Family", "stopbars": {"A": "A321, B737-900/W, B737-800/W, B737-BBJ2/BBJ3, B737-MAX series, F100,A220-300, EMB195-E2", "B": "A220-100, A318, A319, A320, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/W, B737-BBJ, ATR, E170 LR/SU/SE/STD, E175 LR/STD/E2, E190 AR/LR/STD/E2, E 195 AR/LR/STD With no fuel pit available: CRJ-900/ER/LR"}}, "N07": {"stand_type": "Remote", "max_code": "C", "excluded": "MD80/90; DC9, DH8, B727 Family", "stopbars": {"A": "A321, B737-900/W, B737-800/W, B737-BBJ2/BBJ3, B737-MAX series, F100,A220-300, EMB195-E2", "B": "A220-100, A318, A319, A320, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/W, B737-BBJ, ATR, E170 LR/SU/SE/STD, E175 LR/STD/E2, E190 AR/LR/STD/E2, E 195 AR/LR/STD With no fuel pit available: CRJ-900/ER/LR"}}, "N09": {"stand_type": "Remote", "max_code": "C", "excluded": "MD80/90; DC9, DH8, B727 Family", "stopbars": {"A": "A321, B737-900/W, B737-800/W, B737-BBJ2/BBJ3, B737-MAX series, F100,A220-300, EMB195-E2", "B": "A220-100, A318, A319, A320, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/W, B737-BBJ, ATR, E170 LR/SU/SE/STD, E175 LR/STD/E2, E190 AR/LR/STD/E2, E 195 AR/LR/STD With no fuel pit available: CRJ-900/ER/LR"}}, "N11": {"stand_type": "Remote", "max_code": "C", "excluded": "MD80/90; DC9, DH8, B727 Family", "stopbars": {"A": "A321, B737-900/W, B737-800/W, B737-BBJ2/BBJ3, B737-MAX series, F100,A220-300, EMB195-E2", "B": "A220-100, A318, A319, A320, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/W, B737-BBJ, ATR, E170 LR/SU/SE/STD, E175 LR/STD/E2, E190 AR/LR/STD/E2, E 195 AR/LR/STD With no fuel pit available: CRJ-900/ER/LR"}}, "N13": {"stand_type": "Remote", "max_code": "C", "excluded": "MD80/90; DC9, DH8, B727 Family", "stopbars": {"A": "A321, B737-900/W, B737-800/W, B737-BBJ2/BBJ3, B737-MAX series, F100,A220-300, EMB195-E2", "B": "A220-100, A318, A319, A320, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/W, B737-BBJ, ATR, E170 LR/SU/SE/STD, E175 LR/STD/E2, E190 AR/LR/STD/E2, E 195 AR/LR/STD With no fuel pit available: CRJ-900/ER/LR"}}, "N15": {"stand_type": "Remote", "max_code": "C", "excluded": "MD80/90; DC9, DH8, B727 Family", "stopbars": {"A": "A321, B737-900/W, B737-800/W, B737-BBJ2/BBJ3, B737-MAX series, F100,A220-300, EMB195-E2", "B": "A220-100, A318, A319, A320, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/W, B737-BBJ, ATR, E170 LR/SU/SE/STD, E175 LR/STD/E2, E190 AR/LR/STD/E2, E 195 AR/LR/STD With no fuel pit available: CRJ-900/ER/LR"}}, "N17": {"stand_type": "Remote", "max_code": "C", "excluded": "MD80/90; DC9, DH8, B727 Family", "stopbars": {"A": "A321, B737-900/W, B737-800/W, B737-BBJ2/BBJ3, B737-MAX series, F100,A220-300, EMB195-E2", "B": "A220-100, A318, A319, A320, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/W, B737-BBJ, ATR, E170 LR/SU/SE/STD, E175 LR/STD/E2, E190 AR/LR/STD/E2, E 195 AR/LR/STD With no fuel pit available: CRJ-900/ER/LR"}}, "N19": {"stand_type": "Remote -", "max_code": "E", "excluded": "A340-600, A340-500, A350 Series, B777-300, B777-300ER, B747 Series.", "stopbars": {"A": "B787-8, B787-9, B777-200, B777-200ER, B777-200LR, , A330-200, A340-200, A340-300, A330-300, A330-800, A330-900", "B": "B767-400ER, C-17, A300-600F, A300-600B4/C4/F4, A220-100/300, EMB195-E2", "C": "MD 11, MD 82, MD 90-30, MD 90-30ER, B767-200, B767-200ER, B767-300, B767-300ER, B767-300ERW, B757-300, B757-300W, B727-200, B727-200W, DC 10-30, MD83, MD 87, MD 88, TU-154M, B727 Family, EMB175-E2, EMB190-E2", "D": "B737-900, B737-900ER, B737-900ERW, B737-900W, B757-200, B757-200W, A320 CFM-S, A320IAE-S, A320 NEO-CFM, A320 NEO-PW, A320-100, A320-100/V2500, A320-200, A320-200 Bogie,A320-200/V2500, A320-211, B737-200, B737-300, B737-300W, B737-400, B737-500, B737-500W,B737-600, B737-600W, B737-700, B737-700ER, B737-700W, B737-800, B737-800W, B737-BBJ,B737-BBJ2, B737-BBJ2W, B737-BBJ3, B737-BBJ3W, B737-BBJW, ATR 72, ATR 72-500, ATR 72-600, A310-200, A310-300, ATR 42, ATR 42-500, ATR 42-600, A300-600R, A300-B2/B4, A318, A318CFM-S, A318 PW-S, A319, A319 CFM-S, A319 IAE-S, A319 NEO-CFM, A319 NEO-PW, A321 CFMS,A321 IAE-S, A321 NEO-CFM, A321 NEO-PW, A321-100, A321-200, A321-211, AN 12, B737 MAX7, B737 MAX 8, B737 MAX 9, CRJ-900, CRJ-900 ER, CRJ-900 LR, Dash-8 Series 400, EMBRAER170 LR/SU/SE, EMBRAER 170 STD, EMBRAER 175 EWT, EMBRAER 175 LR, EMBRAER 175 STD,EMBRAER 190 AR, EMBRAER 190 LR, EMBRAER 190 STD, EMBRAER 195 AR, EMBRAER 195LR, EMBRAER 195 STD, F 100, TU-134A, TU-204, Yak 42", "E": "Aircrafts codes A & B"}}, "N21": {"stand_type": "Remote", "max_code": "E", "excluded": "Nil", "stopbars": {"A": "A340-600, B777-300/ER, A350-1000", "B": "A330-300, A340-300, A340-500, A350-900, B747-400/ER, B767-400ER, MD11, MD82, MD90,A220-100/300, EMB195-E2", "C": "A330-200, A340-200,, B727-200/W, B737-800/W, B737-900/ER/ERW/W, B737-BBJ2/W, B737-BBJ3/W, B757-300/W, B767-200/ER, B767-300/ER/ERW, B777-200/ER/LR, B787-8, DC10, B727 Family, EMB 175-E2, EMB190-E2", "D": "A300-600R, A310-200, A310-300, A318, A319, A320, A321, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/C/ER/W, B737-BBJ/W, B757-200/W, EMB170LR/SU/SE/STD, EMB175LR/STD, EMB190AR/LR/STD, EMB195AR/LR/STD, F 100, DHC8, ATR 72Without fuel hydrant: CRJ-900/ER/LR"}}, "N30": {"stand_type": "Remote MARS", "max_code": "C", "excluded": "ATR42, ATR72, CRJ900, CRJ1000, MD82, MD83, MD87, MD88, MD90, F100, B727 Family", "stopbars": {"A": "All except types mentioned above"}}, "N32": {"stand_type": "Remote", "max_code": "Up", "excluded": "A330 series, A340 series, A350 series, B747 series, B777 series, B787-900/1000, B767-400 ER.", "stopbars": {"A": "B787-8, B767-300, B767-300ER, B767-300ERW, B757-300, B757-300W, B727 Family", "B": "DC 10-30, A300-600R, A300-B2/B4, B767-200, B767-200ER, B757-200, B757-200W, A310-200, A310-300"}}, "N34": {"stand_type": "MARS Stand", "max_code": "C", "excluded": "ATR42, ATR72, CRJ900, CRJ1000, MD82, MD83, MD87, MD88, MD90, F100, A321, A321 NEO, B717, B737-800, B727 Family, B737-800W, B737-900, B737-900ER, B737-900W, B737-900ERW, B737-BBJ2, B737-BBJ2W, B737-BBJ3, B737-BBJ3W, B737-700MAX,B737-800MAX, B737-900MAX, EMBRAER 135, EMBRAER 145, EMBRAER 170 LR/SU/SE, EMBRAER 170 STD, EMBRAER 175 LR, EMBRAER 175 STD, EMBRAER 190 AR, EMBRAER 190 LR, EMBRAER 190 STD, EMBRAER 195 AR, EMBRAER 195 LR, EMBRAER 195 ST, EMB195-E2, A220-300", "stopbars": {"A": "A320 CFM-S, A320 IAE-S, A320 NEO-CFM, A320 NEO-PW, A320-211, A320-200, A320-100, A320-200 Bogie, A320-100/V2500, A320-200/V2500, ,A220-100, EMB175-E2, EMB190-E2", "B": "A319, A319 CFM-S, A319 IAE-S, A319 NEO-CFM, A319 NEO-PW, B737-BBJW, B737-700W, B737-700ER, B737-BBJ, B737-700, B737 MAX 7, B737-700 SSW, B737-300, B737-300W, A318, A318 CFM-S, A318 PW-S, B737-400, B737-600, B737-600W, B737-500, B737-500W, B737-200"}}, "N02": {"stand_type": "Contact", "max_code": "C", "excluded": "EMB 135, EMB 145, ATR42, AT72, CRJ700, CRJ900, CRJ1000,F100,MD82/ MD83/ MD87/ MD88/ MD90-30/ B717-200, B727 series, A220 Series.", "stopbars": {"A": "All except types mentioned above"}}, "N04": {"stand_type": "Contact", "max_code": "E", "excluded": "Code A, B and EMB 135, EMB 145, ATR42, AT72, CRJ700, CRJ900, CRJ1000,F100,MD82/ MD83/ MD87/ MD88/ MD90-30/ B717-200, B727 series.", "stopbars": {"A": "A340-600, B777-300/ER, A350-1000", "B": "A330-300, A340-300, A340-500, A350-900, B747-400/ER, B767-400ER, MD11, MD82/90", "C": "B787-900", "D": "A330-200, A340-200,, B757-300/W, B767-200/ER, B767-300/ER/ERW, B777-200/ER/LR, B787-8, DC10-30, B727-200/W, B737-800/W, B737-900/W/ER/ERW, B737-BBJ2/BBJ3, B737-MAX series", "E": "A300-600R, A310-200, A310-300, B757-200/W, A318, A319, A320, A321, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/W, B737-BBJ, EMB 175-AR/LR/STD/E2, EMB190 AR/LR/STD/E2, EMB 195 AR/LR/STD/E2, A220-100/300."}}, "N06": {"stand_type": "Contact", "max_code": "C", "excluded": "EMB 135, EMB 145, ATR42, AT72, CRJ700, CRJ900, CRJ1000, F100, MD82 /MD83 /MD87/ MD88/ MD90-30 /B717-200, B727 Series", "stopbars": {"ALL": "All except types mentioned above"}}, "N08": {"stand_type": "Contact", "max_code": "E", "excluded": "Codes A, B & C", "stopbars": {"A": "A340-600, B777-300/ER, A350-1000, B787-1000", "B": "A330-800, A330-200, A330-300, A340-200, A340-300, A340-500,, A350-900, B747-400/ER, B757-300/W, B767-200/ER, B767-300/ER/ERW, B767-400ER, B777-200/ER/LR, B787-8, B787-9, MD 11, DC10-30", "C": "A300-600R, A310-200, A310-300, B757-200/W"}}, "N10": {"stand_type": "MARS Contact", "max_code": "C", "excluded": "EMB 135, EMB 145, ATR42, AT72, CRJ700, CRJ900, CRJ1000, F100, MD82/MD83/MD87/MD88/MD90-30/B717-200, B727 Series, A321", "stopbars": {"A": "B737-800/W, B737-900/W/ER/ERW, B737-BBJ2/BBJ3, B737-MAX series,A220-100/300, EMB 195 AR/LR/STD/E2", "B": "A319, A320, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/W, B737-BBJ, EMB170 LR/SU/SE/STD, EMB175 LR/STD/E2, EMB190 AR/LR/STD/E2"}}, "N12": {"stand_type": "MARS Contact", "max_code": "C", "excluded": "EMB 135, EMB 145, ATR42, AT72, CRJ700, CRJ900, CRJ1000, F100, MD82/MD83/MD87/MD88/MD90-30/B717-200 and B727 Series", "stopbars": {"ALL": "All except types mentioned above"}}, "N14": {"stand_type": "Contact", "max_code": "E", "excluded": "Codes A, B & C", "stopbars": {"A": "A340-600, B777-300/ER, A350-1000, B787-1000", "B": "A330-200, A330-300, A340-200, A340-300, A340-500,, A350-900, B747-400/ER, B757-300/W, B767-200/ER, B767-300/ER/ERW, B767-400ER, B777-200/ER/LR, B787-8/9, MD11, DC10-30", "C": "A300-600R, A310-200, A310-300, B757-200/W"}}, "N16": {"stand_type": "MARS Contact", "max_code": "C", "excluded": "EMB 135, EMB 145, ATR42, AT72, CRJ700, CRJ900, CRJ1000, F100, MD82/MD83/MD87/MD88/MD90-30/B717-200, B727 Series", "stopbars": {"A": "A321, B737-800/W, B737-900/W/ER/ERW, B737-BBJ2/BBJ3, B737-MAX series,A220-100/300, EMB 195 AR/LR/STD/E2", "B": "A319, A320, B737-200, B737-300/W, B737-400, B737-500/W, B737-600, B737-700/W, B737-BBJ, EMB170 LR/SU/SE/STD, EMB175 LR/STD/E2, EMB190 AR/LR/STD/E2"}}, "N18": {"stand_type": "MARS Contact", "max_code": "C", "excluded": "EMB 135, EMB 145, ATR42, AT72, CRJ700, CRJ900, CRJ1000, F100, MD82/MD83/MD87/MD88/MD90-30/B717-200, B727 Series", "stopbars": {"A": "All except types mentioned above"}}, "N20": {"stand_type": "contact", "max_code": "E", "excluded": "Code A, B & C.", "stopbars": {"A": "A340-600, B777-300, B777-300ER, A350-1000", "B": "B787-9, B767-300, B767-300ER, B767-300ERW, A330-300, A340-300, A340-500, B747-400, B747-400 Combi, B747-400ER, MD 11, A350-900, B747-200, B747300, B767-400ER", "C": "B787-8, A300-600R, A340-200, B757-200, B757-200W, A330-200, B757-300, B757-300W, B767-200, B767-200ER, B777-200, B777-200ER, B777-200LR, DC 10-30,, A310-200, A310-300"}}, "N22": {"stand_type": "Contact", "max_code": "C", "excluded": "EMB 135, EMB 145, ATR42, AT72, CRJ700, CRJ900, CRJ1000, F100, MD82/MD83/MD87/MD88/MD90-30/B717-200, B727 Series", "stopbars": {"A": "A321-200, B737-900ERW, A321-100, B737-800, B737-800W, B737-900, B737900ER, B737-900W, B737-BBJ3, B737-BBJ3W, B737-MAX series, A321 CFM-S, A321 IAE-S, A321 NEO-CFM, A321 NEO-PW, A220-100/300 EMB195 AR/LR/STD/E2", "B": "B737-BBJ2, B737-BBJ2W, A320-200, B737-200, B737-300, B737-300W, B737400, B737-500, B737-500W, B737-600, B737-700, B737-700C, B737-700ER, B737-700W, B737-BBJ, B737-BBJW, EMBRAER 170 LR/SU/SE, EMBRAER 170 STD, EMB 175 LR/STD/E2, EMB190 AR/LR//STD/E2, , A319 CFM-S, A319 IAE-S, A319 NEO-CFM, A319 NEO-PW, A320 CFM-S, A320 IAE-S, A320 NEO-CFM, A320 NEO-PW, A319, A320-100"}}, "N24": {"stand_type": "MARS STAND", "max_code": "C", "excluded": "EMB 135, EMB 145, ATR42, AT72, CRJ700, CRJ900, CRJ1000, F100-MD82/MD83/MD87/MD88/MD90-30/B717-200, B727 Series", "stopbars": {"A": "All except types mentioned above"}}, "N26": {"stand_type": "MARS STAND", "max_code": "F", "excluded": "ANT 124, ANT 225, Code A, B & C.", "stopbars": {"A": "A340-600, B777-300, B777-300ER, A350-900, A350-1000", "B": "A380-800/GP, B747-8, B787-1000", "C": "B787-9, A330-200, A330-300, A340-200, A340-300, A340-500, B747-400, B747-400 Combi, B747-400ER, B757-300, B757-300W, B767-200, B767-200ER, B767-300, B767-300ER, B767-300ERW, B767-400ER, B777-200, B777-200ER, B777-200LR, MD 11, DC 10-30, , B747-200, B747-300", "D": "B787-8, A300-600R, A310-200, A310-300, B757-200, B757-200W"}}, "N28": {"stand_type": "MARS Contact", "max_code": "C", "excluded": "EMB 135, EMB 145, ATR42, AT72, CRJ700, CRJ900, CRJ1000, F100-MD82/MD83/MD87/MD88/MD90-30/B717-200, B727 Series", "stopbars": {"A": "A321-200, B737-900ERW, A321-100, B737-800, B737-800W, B737-900, B737900ER, B737-900W, B737-BBJ3, B737-BBJ3W, B737-MAX series, A321 CFM-S, A321 IAE-S, A321 NEO-CFM, A321 NEO-PW, A220-100/300 EMB195 AR/LR/STD/E2", "B": "B737-BBJ2, B737-BBJ2W, A320-200, B737-200, B737-300, B737-300W, B737400, B737-500, B737-500W, B737-600, B737-700, B737-700C, B737-700ER, B737-700W, B737-BBJ, B737-BBJW, EMBRAER 170 LR/SU/SE, EMBRAER 170 STD, EMB 175 LR/STD/E2, EMB190 AR/LR//STD/E2, , A319 CFM-S, A319 IAE-S, A319 NEO-CFM, A319 NEOPW,A320 CFM-S, A320 IAE-S, A320 NEO-CFM, A320 NEO-PW, A319, A320-100"}}, "28": {"stand_type": "Remote", "max_code": "D", "excluded": "B767-400ER, IL76, IL86, L1011-500, DC10-30, MD11.", "stopbars": {"A": "B767-300", "B": "B767-200, B767-200ER, A300-600R, B757-300W, B757-300, B757-200W, B757-200, A310-200, A310-300, B717-200, MD 83, MD 87, MD 90-30, MD 90-30ER, A321-200, B737-900ERW, A321-100, B737-800, B737-800W, B737-900, B737900ER, B737-900W, B737-BBJ3, B737-BBJ3W, B737-Max series, A321 CFM-S, A321 IAE-S, A321 NEO-CFM, A321 NEO-PW, B737-BBJ2, B737-BBJ2W, A320-200, B737-200, B737-300, B737-300W, B737400, B737-500, B737-500W, B737-600, B737-700, B737-700C, B737-700ER, B737-700W, B737-BBJ, B737-BBJW, EMBRAER 170 LR/SU/SE, EMBRAER 170 STD, EMBRAER 175 LR, EMBRAER 175 STD, EMBRAER 190 AR, EMBRAER 190 LR, EMBRAER 190 STD, EMBRAER 195 AR, EMBRAER 195 LR, EMBRAER 195 STD, A319 CFM-S, A319 IAE-S, A319 NEO-CFM, A319 NEO-PW, A320 CFM-S, A320 IAE-S, A320 NEO-CFM, A320 NEO-PW, A319, A320-100"}}, "28A": {"stand_type": "Remote", "max_code": "C", "excluded": "", "stopbars": {"A": "All"}}, "29": {"stand_type": "Remote", "max_code": "E", "excluded": "-", "stopbars": {"A": "A340-600, B777-300, B777-300ER, A350-1000, A350-900", "B": "B787-9, B767-300, B767-300ER, B767-300ERW, A330-300, A340-300, A340-500, B747-400, B747-400 Combi, B747-400ER, MD 11, A350-900, B747-200, B747300, B767-400ER,B787-8, A300-600R, A340-200, B757-200, B757-200W, A330-200, B757-300, B757-300W, B767-200, B767-200ER, B777-200, B777-200ER, B777-200LR, DC 10-30, , A310-200, A310-300."}}, "29A": {"stand_type": "Remote", "max_code": "C", "excluded": "", "stopbars": {"A": "All"}}, "30": {"stand_type": "Remote", "max_code": "E", "excluded": "-", "stopbars": {"A": "A340-600, B777-300, B777-300ER, A350-1000, A350-900", "B": "B787-9, B767-300, B767-300ER, B767-300ERW, A330-300, A340-300, A340-500, B747-400, B747-400 Combi, B747-400ER, MD 11, A350-900, B747-200, B747300, B767-400ER,B787-8, A300-600R, A340-200, B757-200, B757-200W, A330-200, B757-300, B757-300W, B767-200, B767-200ER, B777-200, B777-200ER, B777-200LR, DC 10-30, , A310-200, A310-300."}}, "30A": {"stand_type": "Remote", "max_code": "C", "excluded": "", "stopbars": {"A": "All"}}, "31": {"stand_type": "Remote", "max_code": "D", "excluded": "B767-400ER, IL76, IL86, L1011-500, DC10-30, MD11", "stopbars": {"A": "B767-300", "B": "B767-200, B767-200ER, A300-600R, B757-300W, B757-300, B757-200W, B757-200, A310-200, A310-300, B717-200, MD 83, MD 87, MD 90-30, MD 90-30ER, A321-200, B737-900ERW, A321-100, B737-800, B737-800W, B737-900, B737900ER, B737-900W, B737-BBJ3, B737-BBJ3W, B737-Max series, A321 CFM-S, A321 IAE-S, A321 NEO-CFM, A321 NEO-PW, B737-BBJ2, B737-BBJ2W, A320-200, B737-200, B737-300, B737-300W, B737400, B737-500, B737-500W, B737-600, B737-700, B737-700C, B737-700ER, B737-700W, B737-BBJ, B737-BBJW, EMBRAER 170 LR/SU/SE, EMBRAER 170 STD, EMBRAER 175 LR, EMBRAER 175 STD, EMBRAER 190 AR, EMBRAER 190 LR, EMBRAER 190 STD, EMBRAER 195 AR, EMBRAER 195 LR, EMBRAER 195 STD, A319 CFM-S, A319 IAE-S, A319 NEO-CFM, A319 NEO-PW, A320 CFM-S, A320 IAE-S, A320 NEO-CFM, A320 NEO-PW, A319, A320-100"}}, "31A": {"stand_type": "Remote", "max_code": "C", "excluded": "B737-900/W/ERW, B737-800/W, B737-700/W, B737-600, B737BBJ, B737BBJ2, B737BBJ3", "stopbars": {"A": "All"}}, "32": {"stand_type": "Remote", "max_code": "F", "excluded": "AN 225", "stopbars": {"A": "A340-600, B777-300, B777-300ER, A350-1000, A350-900, A380-800, B747-800 , An124", "B": "B787-9, B767-300, B767-300ER, B767-300ERW, A330-300, A340-300, A340-500, B747-400, B747-400 Combi, B747-400ER, MD 11, A350-900, B747-200, B747300, B767-400ER,B787-8, A300-600R, A340-200, B757-200, B757-200W, A330-200, B757-300, B757-300W, B767-200, B767-200ER, B777-200, B777-200ER, B777-200LR, DC 10-30, , A310-200, A310-300."}}, "32A": {"stand_type": "Remote", "max_code": "C", "excluded": "", "stopbars": {"A": "All"}}, "C1": {"stand_type": "Remote", "max_code": "F", "excluded": "A380-800, AN124, AN225", "stopbars": {"A": "A340-600, B777-300, B777-300ER, A350-1000, A350-900, B747-800", "B": "B787-9, B767-300, B767-300ER, B767-300ERW, A330-300, A340-300, A340-500, B747-400, B747-400 Combi, B747-400ER, MD 11, A350-900, B747-200, B747300, B767-400ER,B787-8, A300-600R, A340-200, B757-200, B757-200W, A330-200, B757-300, B757-300W, B767-200, B767-200ER, B777-200, B777-200ER, B777-200LR, DC 10-30, , A310-200, A310-300, MD 11, DC 10-30."}}, "C2": {"stand_type": "Remote", "max_code": "D", "excluded": "B767-400ER, IL76, IL86, L1011-500, DC10-30, MD11", "stopbars": {"A": "B767-300", "B": "B767-200, B767-200ER, A300-600R, B757-300W, B757-300, B757-200W, B757-200, A310-200, A310-300, B717-200, MD 83, MD 87, MD 90-30, MD 90-30ER, A321-200, B737-900ERW, A321-100, B737-800, B737-800W, B737-900, B737900ER, B737-900W, B737-BBJ3, B737-BBJ3W, B737-Max series, A321 CFM-S, A321 IAE-S, A321 NEO-CFM, A321 NEO-PW, B737-BBJ2, B737-BBJ2W, A320-200, B737-200, B737-300, B737-300W, B737400, B737-500, B737-500W, B737-600, B737-700, B737-700C, B737-700ER, B737-700W, B737-BBJ, B737-BBJW, EMBRAER 170 LR/SU/SE, EMBRAER 170 STD, EMBRAER 175 LR, EMBRAER 175 STD, EMBRAER 190 AR, EMBRAER 190 LR, EMBRAER 190 STD, EMBRAER 195 AR, EMBRAER 195 LR, EMBRAER 195 STD, A319 CFM-S, A319 IAE-S, A319 NEO-CFM, A319 NEO-PW, A320 CFM-S, A320 IAE-S, A320 NEO-CFM, A320 NEO-PW, A319, A320-100", "C": "A310-200, A310-300"}}, "C2A": {"stand_type": "Remote", "max_code": "F", "excluded": "None", "stopbars": {"A": "B747-800, A340-600, B777-300/ER, A350-1000, A380-800", "B": "A330-200, A330-300, A340-200, A340-300, A340-500,, A350-900, B747-400/ER, B757-300/W, B767-200/ER, B767-300/ER/ERW, B767-400ER, B777-200/ER/LR, B787-8, B787-9, MD11, DC10-30", "C": "A 124"}}, "C3": {"stand_type": "Remote", "max_code": "D", "excluded": "B767-400ER, IL76, IL86, L1011-500, DC10-30, MD11", "stopbars": {"A": "B767-300", "B": "B767-200, B767-200ER, A300-600R, B757-300W, B757-300, B757-200W, B757-200, A310-200, A310-300, B717-200, MD 83, MD 87, MD 90-30, MD 90-30ER, A321-200, B737-900ERW, A321-100, B737-800, B737-800W, B737-900, B737900ER, B737-900W, B737-BBJ3, B737-BBJ3W, B737-Max series, A321 CFM-S, A321 IAE-S, A321 NEO-CFM, A321 NEO-PW, B737-BBJ2, B737-BBJ2W, A320-200, B737-200, B737-300, B737-300W, B737400, B737-500, B737-500W, B737-600, B737-700, B737-700C, B737-700ER, B737-700W, B737-BBJ, B737-BBJW, EMBRAER 170 LR/SU/SE, EMBRAER 170 STD, EMBRAER 175 LR, EMBRAER 175 STD, EMBRAER 190 AR, EMBRAER 190 LR, EMBRAER 190 STD, EMBRAER 195 AR, EMBRAER 195 LR, EMBRAER 195 STD, A319 CFM-S, A319 IAE-S, A319 NEO-CFM, A319 NEO-PW, A320 CFM-S, A320 IAE-S, A320 NEO-CFM, A320 NEO-PW, A319, A320-100", "C": "A310-200, A310-300"}}, "C3A": {"stand_type": "Remote", "max_code": "E", "excluded": "Nil", "stopbars": {"A": "A340-600, B777-300, B777-300/ER, A350-1000, A350-900", "B": "A330-200, A330-300, A340-200, A340-300, A340-500,, A350-900, B747-400/ER, B757-300/W, B767-200/ER, B767-300/ER/ERW, B767-400ER, B777-200/ER/LR, B787-8, B787-9, MD11, DC10-30"}}, "C4": {"stand_type": "Remote", "max_code": "D", "excluded": "B767-400ER, IL76, IL86, L1011-500, DC10-30, MD11", "stopbars": {"A": "B767-300", "B": "B767-200, B767-200ER, A300-600R, B757-300W, B757-300, B757-200W, B757-200, A310-200, A310-300, B717-200, MD 83, MD 87, MD 90-30, MD 90-30ER, A321-200, B737-900ERW, A321-100, B737-800, B737-800W, B737-900, B737900ER, B737-900W, B737-BBJ3, B737-BBJ3W, B737-Max series, A321 CFM-S, A321 IAE-S, A321 NEO-CFM, A321 NEO-PW, B737-BBJ2, B737-BBJ2W, A320-200, B737-200, B737-300, B737-300W, B737400, B737-500, B737-500W, B737-600, B737-700, B737-700C, B737-700ER, B737-700W, B737-BBJ, B737-BBJW, EMBRAER 170 LR/SU/SE, EMBRAER 170 STD, EMBRAER 175 LR, EMBRAER 175 STD, EMBRAER 190 AR, EMBRAER 190 LR, EMBRAER 190 STD, EMBRAER 195 AR, EMBRAER 195 LR, EMBRAER 195 STD, A319 CFM-S, A319 IAE-S, A319 NEO-CFM, A319 NEO-PW, A320 CFM-S, A320 IAE-S, A320 NEO-CFM, A320 NEO-PW, A319, A320-100, A310-200/300"}}};
+
+// ============================================================
+// COMPREHENSIVE ICAO AIRCRAFT TYPE REFERENCE (fully offline)
+// [ ICAO type designator, Aircraft name, ICAO Aerodrome Reference Code Letter (A-F) ]
+// ARC letter is based on wingspan per ICAO Annex 14 (used here for stand/stop-bar estimation only).
+// ============================================================
+const AIRCRAFT_REFERENCE = [
+  // ---- Airbus ----
+  ["A30B","Airbus A300B4","D"], ["A306","Airbus A300-600","D"], ["A310","Airbus A310","D"],
+  ["A318","Airbus A318","C"], ["A319","Airbus A319","C"], ["A320","Airbus A320","C"], ["A321","Airbus A321","C"],
+  ["A19N","Airbus A319neo","C"], ["A20N","Airbus A320neo","C"], ["A21N","Airbus A321neo","C"],
+  ["A332","Airbus A330-200","E"], ["A333","Airbus A330-300","E"], ["A338","Airbus A330-800neo","E"], ["A339","Airbus A330-900neo","E"],
+  ["A342","Airbus A340-200","E"], ["A343","Airbus A340-300","E"], ["A345","Airbus A340-500","E"], ["A346","Airbus A340-600","E"],
+  ["A359","Airbus A350-900","E"], ["A35K","Airbus A350-1000","E"],
+  ["A388","Airbus A380-800","F"],
+  ["BCS1","Airbus A220-100","C"], ["BCS3","Airbus A220-300","C"],
+  // ---- Boeing ----
+  ["B701","Boeing 707","D"], ["B712","Boeing 717-200","C"],
+  ["B721","Boeing 727-100","C"], ["B722","Boeing 727-200","C"],
+  ["B731","Boeing 737-100","C"], ["B732","Boeing 737-200","C"], ["B733","Boeing 737-300","C"],
+  ["B734","Boeing 737-400","C"], ["B735","Boeing 737-500","C"], ["B736","Boeing 737-600","C"],
+  ["B737","Boeing 737-700","C"], ["B738","Boeing 737-800","C"], ["B739","Boeing 737-900","C"],
+  ["B37M","Boeing 737 MAX 7","C"], ["B38M","Boeing 737 MAX 8","C"], ["B39M","Boeing 737 MAX 9","C"], ["B3XM","Boeing 737 MAX 10","C"],
+  ["B741","Boeing 747-100","E"], ["B742","Boeing 747-200","E"], ["B743","Boeing 747-300","E"],
+  ["B744","Boeing 747-400","E"], ["B74S","Boeing 747SP","D"], ["B748","Boeing 747-8","F"],
+  ["B752","Boeing 757-200","D"], ["B753","Boeing 757-300","D"],
+  ["B762","Boeing 767-200","D"], ["B763","Boeing 767-300","D"], ["B764","Boeing 767-400ER","D"],
+  ["B772","Boeing 777-200","E"], ["B77L","Boeing 777-200LR","E"], ["B773","Boeing 777-300","E"],
+  ["B77W","Boeing 777-300ER","E"], ["B778","Boeing 777-8","E"], ["B779","Boeing 777-9","F"], ["B77F","Boeing 777F","E"],
+  ["B788","Boeing 787-8","E"], ["B789","Boeing 787-9","E"], ["B78X","Boeing 787-10","E"],
+  // ---- McDonnell Douglas ----
+  ["DC91","DC-9-10","C"], ["DC93","DC-9-30","C"], ["DC95","DC-9-50","C"],
+  ["MD81","MD-81","C"], ["MD82","MD-82","C"], ["MD83","MD-83","C"], ["MD87","MD-87","C"], ["MD88","MD-88","C"], ["MD90","MD-90","C"],
+  ["DC10","DC-10","D"], ["MD11","MD-11","D"],
+  // ---- Embraer ----
+  ["E110","Embraer EMB-110 Bandeirante","B"], ["E120","Embraer EMB-120 Brasilia","B"],
+  ["E135","Embraer ERJ-135","B"], ["E140","Embraer ERJ-140","B"], ["E145","Embraer ERJ-145","B"],
+  ["E170","Embraer E170","C"], ["E75L","Embraer E175 (long wing)","C"], ["E75S","Embraer E175 (short wing)","C"],
+  ["E190","Embraer E190","C"], ["E195","Embraer E195","C"],
+  ["E275","Embraer E175-E2","C"], ["E290","Embraer E190-E2","C"], ["E295","Embraer E195-E2","C"],
+  // ---- Bombardier / CRJ / Dash 8 ----
+  ["CRJ1","Bombardier CRJ100","B"], ["CRJ2","Bombardier CRJ200","B"],
+  ["CRJ7","Bombardier CRJ700","C"], ["CRJ9","Bombardier CRJ900","C"], ["CRJX","Bombardier CRJ1000","C"],
+  ["DH8A","De Havilland Dash 8-100","B"], ["DH8B","De Havilland Dash 8-200","B"],
+  ["DH8C","De Havilland Dash 8-300","C"], ["DH8D","De Havilland Dash 8-400 (Q400)","C"],
+  // ---- ATR ----
+  ["AT43","ATR 42-300","B"], ["AT45","ATR 42-500","B"], ["AT46","ATR 42-600","B"],
+  ["AT72","ATR 72-200","C"], ["AT75","ATR 72-500","C"], ["AT76","ATR 72-600","C"],
+  // ---- BAe / Avro / Fokker ----
+  ["B461","BAe 146-100","C"], ["B462","BAe 146-200","C"], ["B463","BAe 146-300","C"],
+  ["RJ70","Avro RJ70","C"], ["RJ85","Avro RJ85","C"], ["RJ1H","Avro RJ100","C"],
+  ["JS31","BAe Jetstream 31","B"], ["JS41","BAe Jetstream 41","B"], ["ATP","BAe ATP","C"],
+  ["F27","Fokker F27 Friendship","C"], ["F28","Fokker F28 Fellowship","C"],
+  ["F50","Fokker 50","C"], ["F70","Fokker 70","C"], ["F100","Fokker 100","C"],
+  // ---- Ilyushin / Tupolev / Antonov / Yakovlev (Russian) ----
+  ["IL62","Ilyushin Il-62","D"], ["IL76","Ilyushin Il-76","D"], ["IL86","Ilyushin Il-86","D"], ["IL96","Ilyushin Il-96","E"],
+  ["TU134","Tupolev Tu-134","C"], ["TU154","Tupolev Tu-154","D"], ["TU204","Tupolev Tu-204","D"],
+  ["AN12","Antonov An-12","D"], ["AN24","Antonov An-24","B"], ["AN26","Antonov An-26","B"],
+  ["AN140","Antonov An-140","B"], ["AN148","Antonov An-148","C"], ["AN158","Antonov An-158","C"],
+  ["AN124","Antonov An-124","F"], ["AN225","Antonov An-225","F"],
+  ["YK40","Yakovlev Yak-40","B"], ["YK42","Yakovlev Yak-42","C"],
+  // ---- Sukhoi / COMAC ----
+  ["SU95","Sukhoi Superjet 100","C"], ["C919","COMAC C919","C"], ["AR21","COMAC ARJ21","C"],
+  // ---- Lockheed / Military & Cargo ----
+  ["L101","Lockheed L-1011 TriStar","D"], ["C130","Lockheed C-130 Hercules","C"],
+  ["C17","Boeing C-17 Globemaster III","D"], ["C5M","Lockheed C-5 Galaxy","F"], ["A400","Airbus A400M Atlas","D"],
+  // ---- Small turboprops / regional / GA ----
+  ["SF34","Saab 340","B"], ["SB20","Saab 2000","C"], ["D328","Dornier 328","B"],
+  ["L410","LET L-410 Turbolet","B"], ["DHC6","De Havilland DHC-6 Twin Otter","B"], ["DHC7","De Havilland DHC-7 Dash 7","C"],
+  ["BE99","Beechcraft 99","A"], ["BE1900","Beechcraft 1900","B"], ["C208","Cessna 208 Caravan","A"],
+  ["MA60","Xian MA60","C"], ["IL114","Ilyushin Il-114","C"]
+];
+
+// Derive the fast lookup dictionary (normalized key -> ARC code letter) from the reference table,
+// keyed both by ICAO type designator and by aircraft name — all offline, no network required.
+function buildACDB(){
+  const dict = {};
+  AIRCRAFT_REFERENCE.forEach(([icao, name, code])=>{
+    dict[norm(icao)] = code;
+    dict[norm(name)] = code;
+  });
+  // Common generic family aliases (when only a family name is typed, e.g. "A320" or "B737")
+  Object.assign(dict, {
+    "A318":"C","A319":"C","A320":"C","A321":"C","A220":"C",
+    "B737":"C","B7378":"C",
+    "B787":"E","B7878":"E","B787800":"E","B7879":"E","B787900":"E",
+    "ERJ190":"C","ERJ195":"C","EMB190":"C","EMB195":"C","EMB170":"C","EMB175":"C",
+    "B777":"E","B777200":"E","B777300":"E",
+    "A330":"E","A340":"E","A350":"E",
+    "B747":"E","B7478":"F","B757":"D","B767":"D","A300":"D","A310":"D",
+    "CRJ900":"C","CRJ700":"C","CRJ1000":"C","CRJ200":"B","CRJ100":"B",
+    "DASH8":"C","Q400":"C","ATR42":"B","ATR72":"C"
+  });
+  return dict;
+}
+
+const BRAND_PHRASES = ["MCDONNELL DOUGLAS","DE HAVILLAND","BOEING","AIRBUS","EMBRAER","BOMBARDIER","AVRO","ANTONOV","TUPOLEV","ILYUSHIN","YAKOVLEV","LOCKHEED","XIAN"];
+
+function norm(s){
+  let t = (s||'').toUpperCase();
+  t = t.replace(/SERIES/g,'');
+  BRAND_PHRASES.forEach(b=>{ t = t.split(b).join(''); });
+  t = t.replace(/[^A-Z0-9]/g,'');
+  return t;
+}
+
+const ACDB = buildACDB();
+
+const CODE_ORDER = {A:1,B:2,C:3,D:4,E:5,F:6};
+
+function acCodeOf(query){
+  const nq = norm(query);
+  let best=null, bestLen=0;
+  for(const key in ACDB){
+    if(nq.includes(key) || key.includes(nq)){
+      if(key.length>bestLen){ bestLen=key.length; best=ACDB[key]; }
+    }
+  }
+  return best;
+}
+
+function splitTokens(text){
+  return text.split(/,|\s+and\s+/i).map(t=>t.trim()).filter(t=>t.length>0);
+}
+
+function expandToken(token){
+  const variants = [token];
+  if(token.includes('/')){
+    const parts = token.split('/').map(p=>p.trim()).filter(Boolean);
+    const first = parts[0];
+    const dashIdx = first.lastIndexOf('-');
+    const letterPrefixMatch = first.match(/^[A-Za-z]+/);
+    const letterPrefix = letterPrefixMatch ? letterPrefixMatch[0] : '';
+    for(let i=1;i<parts.length;i++){
+      const p = parts[i];
+      if(/^[A-Za-z]+$/.test(p)){
+        variants.push(first+p);
+      } else if(dashIdx!==-1){
+        variants.push(first.slice(0,dashIdx+1)+p);
+      } else if(letterPrefix){
+        variants.push(letterPrefix+p);
+      } else {
+        variants.push(p);
+      }
+    }
+  }
+  return variants;
+}
+
+function findExactMatch(stand, query){
+  const nq = norm(query);
+  if(!nq) return null;
+  let candidates = [];
+  for(const letter in stand.stopbars){
+    if(letter==='ALL') continue;
+    const tokens = splitTokens(stand.stopbars[letter]);
+    for(const tok of tokens){
+      for(const variant of expandToken(tok)){
+        const ntok = norm(variant);
+        if(!ntok) continue;
+        if(ntok===nq){
+          candidates.push({letter, token:tok, score:1000});
+        } else if(ntok.startsWith(nq) || nq.startsWith(ntok)){
+          const score = Math.min(ntok.length,nq.length);
+          candidates.push({letter, token:tok, score});
+        } else if(ntok.includes(nq) && nq.length>=3){
+          candidates.push({letter, token:tok, score: nq.length});
+        } else if(nq.includes(ntok) && ntok.length>=3){
+          candidates.push({letter, token:tok, score: ntok.length});
+        }
+      }
+    }
+  }
+  if(candidates.length===0) return null;
+  candidates.sort((a,b)=>b.score-a.score);
+  return candidates[0];
+}
+
+function isExcluded(stand, query){
+  if(!stand.excluded || stand.excluded==='-' || stand.excluded.trim()==='') return null;
+  const nq = norm(query);
+  const tokens = splitTokens(stand.excluded);
+  for(const tok of tokens){
+    for(const variant of expandToken(tok)){
+      const ntok = norm(variant);
+      if(!ntok) continue;
+      if(ntok===nq || ntok.startsWith(nq) || nq.startsWith(ntok)){
+        return tok;
+      }
+      if(ntok.includes(nq) && nq.length>=3) return tok;
+      if(nq.includes(ntok) && ntok.length>=3) return tok;
+    }
+  }
+  return null;
+}
+
+function hasAllBucket(stand){
+  for(const letter in stand.stopbars){
+    if(letter==='ALL') return stand.stopbars[letter];
+  }
+  return null;
+}
+
+function bucketDominantCode(text){
+  const tokens = splitTokens(text);
+  const counts = {};
+  for(const tok of tokens){
+    const c = acCodeOf(tok);
+    if(c) counts[c]=(counts[c]||0)+1;
+  }
+  let best=null,bestN=0;
+  for(const c in counts){ if(counts[c]>bestN){bestN=counts[c];best=c;} }
+  return best;
+}
+
+function estimateByCode(stand, query){
+  const qCode = acCodeOf(query);
+  if(!qCode) return {status:'unknown'};
+  if(stand.max_code && CODE_ORDER[qCode] > CODE_ORDER[stand.max_code]){
+    return {status:'incompatible', qCode};
+  }
+  let best=null, bestDiff=99;
+  for(const letter in stand.stopbars){
+    if(letter==='ALL') continue;
+    const dom = bucketDominantCode(stand.stopbars[letter]);
+    if(!dom) continue;
+    const diff = Math.abs(CODE_ORDER[dom]-CODE_ORDER[qCode]);
+    if(diff<bestDiff){ bestDiff=diff; best=letter; }
+  }
+  if(best) return {status:'estimated', letter:best, qCode};
+  return {status:'unknown', qCode};
+}
+
+// ONLINE AIRCRAFT SEARCH BY REGISTRATION
+async function searchAircraftByReg(registration){
+  try {
+    console.log('🔍 Searching for registration:', registration);
+
+    // Try hexdb.io API
+    try {
+      const hexdbUrl = `https://hexdb.io/api/v1/aircraft/${encodeURIComponent(registration)}`;
+      const resp = await fetch(hexdbUrl);
+
+      if(resp.ok){
+        const data = await resp.json();
+        console.log('✅ Found via hexdb.io:', data);
+
+        if(data.Registration && data.Type){
+          return {
+            found: true,
+            registration: data.Registration,
+            type: data.Type,
+            operator: data.RegisteredOwners || data.Operator || 'Unknown',
+            source: 'hexdb.io',
+            url: `https://hexdb.io/hex-icao/${registration}`
+          };
+        }
+      }
+    } catch(e){
+      console.log('hexdb.io failed, trying next...');
+    }
+
+    // Fallback: Try OpenSky
+    try {
+      const cleanReg = registration.replace(/[^A-Z0-9]/g, '');
+      const skyUrl = `https://opensky-network.org/api/metadata/aircraft/icao/${cleanReg}`;
+      const skyResp = await fetch(skyUrl);
+
+      if(skyResp.ok){
+        const skyData = await skyResp.json();
+        console.log('✅ Found via OpenSky:', skyData);
+
+        if(skyData.model || skyData.typecode){
+          return {
+            found: true,
+            registration: skyData.registration || registration,
+            type: skyData.model || skyData.typecode,
+            operator: skyData.owner || 'Unknown',
+            source: 'OpenSky Network',
+            url: `https://opensky-network.org/aircraft-profile?icao24=${cleanReg.toLowerCase()}`
+          };
+        }
+      }
+    } catch(e){
+      console.log('OpenSky failed');
+    }
+
+    console.log('❌ No results from any API');
+    return null;
+
+  } catch(e){
+    console.error('❌ Search error:', e);
+    return null;
+  }
+}
+
+const standInput = document.getElementById('standInput');
+const regInput = document.getElementById('regInput');
+const acInput = document.getElementById('acInput');
+const standListEl = document.getElementById('standList');
+const regListEl = document.getElementById('regList');
+const acListEl = document.getElementById('acList');
+
+function standSortKey(s){
+  const m = s.match(/^([A-Z]*)(\d+)([A-Z]*)$/);
+  if(!m) return [s,0,''];
+  return [m[1], parseInt(m[2]), m[3]];
+}
+
+const sortedStandKeys = Object.keys(STANDS).slice().sort((a,b)=>{
+  const ka=standSortKey(a), kb=standSortKey(b);
+  if(ka[0]!==kb[0]) return ka[0]<kb[0]?-1:1;
+  if(ka[1]!==kb[1]) return ka[1]-kb[1];
+  return ka[2]<kb[2]?-1:(ka[2]>kb[2]?1:0);
+});
+
+sortedStandKeys.forEach(k=>{
+  const opt = document.createElement('option');
+  opt.value = k;
+  standListEl.appendChild(opt);
+});
+
+// Populate registration datalist
+Object.keys(RJ_FLEET).sort().forEach(reg=>{
+  const opt = document.createElement('option');
+  opt.value = reg;
+  opt.label = RJ_FLEET[reg].type;
+  regListEl.appendChild(opt);
+});
+
+// Populate aircraft type datalist (RJ fleet types first, then the full offline ICAO reference)
+const acTypes = new Set();
+Object.values(RJ_FLEET).forEach(ac=>acTypes.add(ac.type));
+AIRCRAFT_REFERENCE.forEach(([icao, name])=>acTypes.add(name));
+[...acTypes].sort().forEach(type=>{
+  const opt = document.createElement('option');
+  opt.value = type;
+  acListEl.appendChild(opt);
+});
+
+function resolveStandKey(raw){
+  if(!raw) return null;
+  const val = raw.trim().toUpperCase().replace(/[\s\-_]+/g,'');
+  if(STANDS[val]) return val;
+  const m = val.match(/^([A-Z]*)(\d+)([A-Z]*)$/);
+  if(m){
+    const letter=m[1], num=parseInt(m[2],10), suffix=m[3];
+    const padded = letter + String(num).padStart(2,'0') + suffix;
+    if(STANDS[padded]) return padded;
+    for(const k of sortedStandKeys){
+      const km = k.match(/^([A-Z]*)(\d+)([A-Z]*)$/);
+      if(km && km[1]===letter && parseInt(km[2],10)===num && km[3]===suffix) return k;
+    }
+  }
+  return null;
+}
+
+const standMetaEl = document.getElementById('standMeta');
+const resultBox = document.getElementById('resultBox');
+const fullTablePanel = document.getElementById('fullTablePanel');
+const fullTable = document.getElementById('fullTable');
+const refSearchEl = document.getElementById('refSearch');
+const refTableEl = document.getElementById('refTable');
+const refCountEl = document.getElementById('refCount');
+
+function renderRefTable(){
+  const q = norm(refSearchEl.value);
+  const rows = AIRCRAFT_REFERENCE
+    .filter(([icao, name])=> !q || norm(icao).includes(q) || norm(name).includes(q))
+    .sort((a,b)=> a[1].localeCompare(b[1]));
+
+  let body = '';
+  rows.forEach(([icao, name, code])=>{
+    body += `<tr><td class="letter">${icao}</td><td>${name}</td><td class="letter">${code}</td></tr>`;
+  });
+  refTableEl.innerHTML = `<tr><th>${tr('refColIcao')}</th><th>${tr('refColType')}</th><th>${tr('refColCode')}</th></tr>` +
+    (rows.length ? body : `<tr><td colspan="3" style="text-align:center;color:var(--muted);">${tr('refNoResults')}</td></tr>`);
+  refCountEl.textContent = tr('refCount', rows.length);
+}
+refSearchEl.addEventListener('input', renderRefTable);
+
+function renderStandMeta(stand){
+  standMetaEl.innerHTML =
+    `<span>${tr('standTypeLabel')} <b>${stand.stand_type||'—'}</b></span>` +
+    `<span>${tr('maxCodeLabel')} <b>${stand.max_code||'—'}</b></span>` +
+    (stand.excluded && stand.excluded!=='-' && stand.excluded.trim()!=='' ? `<span>${tr('excludedLabel')} <b>${stand.excluded}</b></span>` : '');
+}
+
+function renderFullTable(stand, highlightLetter){
+  let rows = '';
+  const order = Object.keys(stand.stopbars).sort((a,b)=>{
+    if(a==='ALL') return -1; if(b==='ALL') return 1;
+    return a.localeCompare(b);
+  });
+  order.forEach(letter=>{
+    const hl = letter===highlightLetter ? ' class="hl"' : '';
+    rows += `<tr${hl}><td class="letter">${letter}</td><td>${stand.stopbars[letter]}</td></tr>`;
+  });
+  fullTable.innerHTML = `<tr><th>${tr('tableStopBar')}</th><th>${tr('tableTypes')}</th></tr>${rows}`;
+  fullTablePanel.style.display = 'block';
+}
+
+function showResult(html){
+  resultBox.innerHTML = html;
+  resultBox.classList.add('show');
+}
+
+async function runLookup(){
+  const rawStand = standInput.value;
+  const standKey = resolveStandKey(rawStand);
+
+  if(!standKey){
+    standMetaEl.innerHTML = '';
+    fullTablePanel.style.display = 'none';
+    if(rawStand.trim()){
+      showResult(`
+        <div class="notice danger">
+          ${tr('standNotFound')}
+        </div>
+      `);
+    } else {
+      resultBox.classList.remove('show');
+    }
+    return;
+  }
+
+  const stand = STANDS[standKey];
+  renderStandMeta(stand);
+
+  const rawReg = regInput.value.trim().toUpperCase();
+  let query = acInput.value.trim();
+  let aircraft = null;
+  let isRJFleet = false;
+  let onlineData = null;
+
+  if(rawReg){
+    if(RJ_FLEET[rawReg]){
+      aircraft = RJ_FLEET[rawReg];
+      query = aircraft.type;
+      isRJFleet = true;
+      acInput.value = query;
+    } else {
+      showResult(`
+        <div class="light-card">
+          <div class="light searching">🔍</div>
+          <div class="result-body">
+            <p class="result-title"><span class="tag online">${tr('searchingTag')}</span></p>
+            <p class="result-main">${tr('searchingMain', rawReg)}</p>
+            <p class="result-sub">${tr('searchingSub')}</p>
+          </div>
+        </div>
+      `);
+
+      onlineData = await searchAircraftByReg(rawReg);
+
+      if(onlineData && onlineData.found){
+        query = onlineData.type;
+        acInput.value = query;
+        console.log('✅ Found aircraft online:', onlineData);
+      } else {
+        showResult(`
+          <div class="notice danger">
+            ${tr('regNotFound', rawReg)}
+            <br><br>
+            ${tr('regNotFoundIntro')}
+            <ul style="margin:10px 0;padding-inline-start:20px;">
+              ${tr('regNotFoundList').map(li=>`<li>${li}</li>`).join('')}
+            </ul>
+          </div>
+        `);
+        renderFullTable(stand, null);
+        return;
+      }
+    }
+  }
+
+  if(!query){
+    resultBox.classList.remove('show');
+    renderFullTable(stand, null);
+    return;
+  }
+
+  const exact = findExactMatch(stand, query);
+  if(exact){
+    let extraInfo = '';
+    if(isRJFleet){
+      extraInfo = `
+        <div class="ac-info">
+          <span class="label">${tr('acInfoReg')}</span><span class="value">${rawReg}</span>
+          <span class="label">${tr('acInfoType')}</span><span class="value">${aircraft.type}</span>
+          <span class="label">${tr('acInfoSeq')}</span><span class="value">#${aircraft.seq}</span>
+        </div>
+      `;
+    } else if(onlineData){
+      extraInfo = `
+        <div class="ac-info">
+          <span class="label">${tr('acInfoReg')}</span><span class="value">${onlineData.registration}</span>
+          <span class="label">${tr('acInfoType')}</span><span class="value">${onlineData.type}</span>
+          <span class="label">${tr('acInfoOperator')}</span><span class="value">${onlineData.operator}</span>
+          <span class="label">${tr('acInfoSource')}</span><span class="value"><a href="${onlineData.url}" target="_blank" style="color:var(--blue)">${onlineData.source}</a></span>
+        </div>
+      `;
+    }
+    showResult(`
+      <div class="light-card">
+        <div class="light ok">${exact.letter}</div>
+        <div class="result-body">
+          <p class="result-title"><span class="tag ${isRJFleet?'fleet':(onlineData?'online':'exact')}">${isRJFleet?tr('tagFleet'):(onlineData?tr('tagOnline'):tr('tagExact'))}</span></p>
+          <p class="result-main">${tr('stopBarMain', exact.letter, standKey)}</p>
+          <p class="result-sub">${tr('exactSub', exact.token)}</p>
+          ${extraInfo}
+        </div>
+      </div>
+    `);
+    renderFullTable(stand, exact.letter);
+    return;
+  }
+
+  const excl = isExcluded(stand, query);
+  if(excl){
+    showResult(`
+      <div class="light-card">
+        <div class="light bad">✕</div>
+        <div class="result-body">
+          <p class="result-title"><span class="tag blocked">${tr('tagBlocked')}</span></p>
+          <p class="result-main">${tr('excludedMain', standKey)}</p>
+          <p class="result-sub">${tr('excludedSub', excl)}</p>
+        </div>
+      </div>
+    `);
+    renderFullTable(stand, null);
+    return;
+  }
+
+  const allText = hasAllBucket(stand);
+  if(allText){
+    showResult(`
+      <div class="light-card">
+        <div class="light ok">ALL</div>
+        <div class="result-body">
+          <p class="result-title"><span class="tag exact">${tr('tagAll')}</span></p>
+          <p class="result-main">${tr('allMain', standKey)}</p>
+          <p class="result-sub">${tr('allSub', allText, stand.max_code)}</p>
+        </div>
+      </div>
+    `);
+    renderFullTable(stand, 'ALL');
+    return;
+  }
+
+  const est = estimateByCode(stand, query);
+  if(est.status==='incompatible'){
+    showResult(`
+      <div class="light-card">
+        <div class="light bad">✕</div>
+        <div class="result-body">
+          <p class="result-title"><span class="tag blocked">${tr('tagIncompatible')}</span></p>
+          <p class="result-main">${tr('incompatibleMain', est.qCode, standKey, stand.max_code)}</p>
+          <p class="result-sub">${tr('incompatibleSub')}</p>
+        </div>
+      </div>
+    `);
+    renderFullTable(stand, null);
+    return;
+  }
+
+  if(est.status==='estimated'){
+    let extraInfo = '';
+    if(isRJFleet){
+      extraInfo = `
+        <div class="ac-info">
+          <span class="label">${tr('acInfoReg')}</span><span class="value">${rawReg}</span>
+          <span class="label">${tr('acInfoType')}</span><span class="value">${aircraft.type}</span>
+          <span class="label">${tr('acInfoSeq')}</span><span class="value">#${aircraft.seq}</span>
+        </div>
+      `;
+    } else if(onlineData){
+      extraInfo = `
+        <div class="ac-info">
+          <span class="label">${tr('acInfoReg')}</span><span class="value">${onlineData.registration}</span>
+          <span class="label">${tr('acInfoType')}</span><span class="value">${onlineData.type}</span>
+          <span class="label">${tr('acInfoOperator')}</span><span class="value">${onlineData.operator}</span>
+          <span class="label">${tr('acInfoSource')}</span><span class="value"><a href="${onlineData.url}" target="_blank" style="color:var(--blue)">${onlineData.source}</a></span>
+        </div>
+      `;
+    }
+    showResult(`
+      <div class="light-card">
+        <div class="light warn">${est.letter}</div>
+        <div class="result-body">
+          <p class="result-title"><span class="tag ${isRJFleet?'fleet':(onlineData?'online':'estimate')}">${isRJFleet?tr('tagFleetEst'):(onlineData?tr('tagOnlineEst'):tr('tagAutoEst'))}</span></p>
+          <p class="result-main">${tr('suggestedMain', est.letter, standKey)}</p>
+          <p class="result-sub">${tr('estimatedSub', est.qCode)}</p>
+          ${extraInfo}
+        </div>
+      </div>
+    `);
+    renderFullTable(stand, est.letter);
+    return;
+  }
+
+  showResult(`
+    <div class="notice danger">
+      ${tr('notRecognized')}
+    </div>
+  `);
+  renderFullTable(stand, null);
+}
+
+regInput.addEventListener('input', ()=>{
+  clearTimeout(window.regTimeout);
+  window.regTimeout = setTimeout(runLookup, 1200);
+});
+
+acInput.addEventListener('input', ()=>{
+  if(acInput.value.trim()){
+    regInput.value = '';
+  }
+  clearTimeout(window.searchTimeout);
+  window.searchTimeout = setTimeout(runLookup, 500);
+});
+
+standInput.addEventListener('input', runLookup);
+
+// Show "add to home screen" hint on mobile browsers (not already installed)
+(function(){
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const dismissed = false; // resets each load; in-memory only
+  if(isMobile && !isStandalone && !dismissed){
+    document.getElementById('installHint').classList.add('show');
+  }
+  document.getElementById('closeHint').addEventListener('click', ()=>{
+    document.getElementById('installHint').classList.remove('show');
+  });
+})();
+
+// Language toggle
+document.getElementById('langToggle').addEventListener('click', ()=>{
+  LANG = LANG==='en' ? 'ar' : 'en';
+  applyStaticLanguage();
+  runLookup();
+  renderRefTable();
+});
+
+// Auto-detect Arabic-preferring browsers on first load, default otherwise to English
+if(navigator.language && navigator.language.toLowerCase().startsWith('ar')){
+  LANG = 'ar';
+}
+applyStaticLanguage();
+
+standInput.value = sortedStandKeys[0];
+runLookup();
+renderRefTable();
+
+</script>
+</body>
+</html>
